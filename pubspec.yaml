@@ -41,7 +41,9 @@ dependencies:
   http: ^0.13.5
   bloc: 
   dio:
-  
+  carousel_slider: ^4.2.1
+  iconsax:
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

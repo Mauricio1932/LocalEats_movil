@@ -12,22 +12,18 @@ class LocalesBloc extends Bloc<LocalesEvent, LocalesState> {
     on<LocalView>(_handleViewLocal);
   }
 
-  // final LocalesRepository api = LocalesRepository();
-
   Future<void> _handleLocalesRecuested(
     LocalRequest event,
-
     Emitter<LocalesState> emit,
   ) async {
     try {
-
       emit(state.copyWith(
         localesStatus: LocalesRequest.requestInProgress,
       ));
 
       final response = await getLocalUsecase.execute();
       // final response = await api.getProducts();
-        // print(response);
+      // print(response);
 
       emit(state.copyWith(
         localesStatus: LocalesRequest.requestSuccess,
