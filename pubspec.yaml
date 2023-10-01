@@ -40,9 +40,10 @@ dependencies:
   shared_preferences: ^2.2.0
   http: ^0.13.5
   bloc: 
-  dio:
+  dio: ^5.3.3
   carousel_slider: ^4.2.1
   iconsax:
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

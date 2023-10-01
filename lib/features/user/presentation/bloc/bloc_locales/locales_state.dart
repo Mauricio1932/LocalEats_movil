@@ -1,4 +1,6 @@
-import '../../../locales/domain/entities/local.dart';
+// import '../../../locales/domain/entities/local.dart';
+
+import '../../../../locales/domain/entities/local.dart';
 
 enum LocalesRequest {
   unknown,
@@ -21,7 +23,8 @@ class LocalesState {
   LocalesState copyWith({
     List<Local>? locales,
     LocalesState? localesState,
-    Set<int>? localId, required localesStatus,
+    Set<int>? localId,
+    required localesStatus,
   }) =>
       LocalesState(
         locales: locales ?? this.locales,
@@ -29,3 +32,13 @@ class LocalesState {
         localId: localId ?? this.localId,
       );
 }
+
+
+enum OneLocalRequest {
+  unknown,
+  requestInProgress,
+  requestSuccess,
+  requestFailure
+}
+
+

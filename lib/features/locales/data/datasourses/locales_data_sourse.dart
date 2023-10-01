@@ -1,22 +1,17 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
 import 'package:localeats/features/locales/data/models/local_model.dart';
 import 'package:http/http.dart' as http;
-import 'package:localeats/features/locales/domain/entities/local.dart';
 
 abstract class LocalApiDatasource {
   Future<List<LocalModel>> getLocals();
+  Future<LocalModel> getSingleLocals(int local);
   // Future<void> postAddProduct(Local product);
   // Future<void> putUpdateProduct(Local product);
   // Future<void> deleteProduct(String id);
 }
 
 class ApiLocalDatasourceImp implements LocalApiDatasource {
-  final String apiUrl = 'https://fakestoreapi.com/products';
-
-  // final Dio _client = Dio(BaseOptions(
-  //   baseUrl: 'https://fakestoreapi.com/products',
-  // ));
+  final String apiUrl = 'https://fakestoreapi.com/products/';
 
   @override
   Future<List<LocalModel>> getLocals() async {
@@ -25,8 +20,9 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
 
-      final locals = body.map((dynamic item) => LocalModel.fromJson(item)).toList();
-      print("locales ${locals}");
+      final locals =
+          body.map((dynamic item) => LocalModel.fromJson(item)).toList();
+      // print("locales ${locals}");
       // return Future.value(locals); // Envuelve la lista en un Future
       return locals;
     } else {
@@ -34,18 +30,21 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
     }
   }
 
-  // @override
-  // Future<List<LocalModel>> getLocals() async {
-  //   final response = await http.get(Uri.parse(apiUrl));
+  @override
+  Future<LocalModel> getSingleLocals(int local) async {
+    final response = await http.get(Uri.parse('$apiUrl/$local'));
 
-  //   if (response.statusCode == 200) {
-  //     List<dynamic> body = jsonDecode(response.body);
+      // print("petcion ${local}");
+    if (response.statusCode == 200) {
+      final dynamic jsonData = jsonDecode(response.body);
 
-  //     return body.map((dynamic item) => LocalModel.fromJson(item)).toList();
-  //   } else {
-  //     throw Exception('Failed to load locals');
-  //   }
-  // }
+      final local = LocalModel.fromJson(jsonData);
+
+      return local;
+    } else {
+      throw Exception('Failed to load product');
+    }
+  }
 
   // @override
   // Future<void> postAddProduct(Product product) async {

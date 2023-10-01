@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart';
+
 import '../entities/local.dart';
 
 abstract class LocalRepository {
@@ -6,5 +8,5 @@ abstract class LocalRepository {
   // Future<void> deleteProduct(String productId);
 
   Future<List<Local>> getLocals();
-
+  Future<Local> getSingleLocals(int localId);
 }

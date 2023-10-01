@@ -1,18 +1,19 @@
-import '../entities/local.dart';
-import '../repository/locales_repository.dart';
-// import '../repositories/local_repository.dart';
+import 'package:localeats/features/locales/domain/entities/local.dart';
 
-class GetLocalUsecase {
+import '../repository/locales_repository.dart';
+
+class GetSingleLocalUsecase {
   final LocalRepository localRepository;
 
-  GetLocalUsecase(this.localRepository);
+  GetSingleLocalUsecase(this.localRepository);
 
-  Future<List<Local>> execute() async {
+  Future<Local> execute(localId) async {
     try {
       // Llama al repositorio para obtener la lista de locales
-      final locales = await localRepository.getLocals();
+      final locales = await localRepository.getSingleLocals(localId);
 
-      if (locales.isNotEmpty) {
+      // ignore: unnecessary_null_comparison
+      if (locales != null) {
         return locales; // Devuelve la lista de locales
       } else {
         throw Exception('La lista de locales está vacía');

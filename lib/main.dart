@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localeats/features/user/presentation/bloc/bloc_login/user_bloc.dart';
 
-import 'features/user/presentation/bloc/locales_bloc.dart';
+import 'features/user/presentation/bloc/bloc_locales/locales_bloc.dart';
+import 'features/user/presentation/bloc/bloc_single_local/single_local_bloc.dart';
+import 'login_usecase_config.dart';
 import 'splash_screen.dart';
-import 'usecase_locales.dart';
+import 'usecase_locales_config.dart';
 
 // import 'usecase_config.dart';
 
 UsecaseLocalesConfig usecaseConfig = UsecaseLocalesConfig();
+UseCaseUserConfig useCaseUserConfig = UseCaseUserConfig();
 
 void main() {
   runApp(const MyApp());
@@ -21,7 +25,15 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (BuildContext context) => LocalesBloc(usecaseConfig.getLocalUsecase!,)
+          create: (BuildContext context) => LocalesBloc(usecaseConfig.getLocalUsecase!)
+        ),
+
+        BlocProvider(
+          create: (BuildContext context) => LocalesSingleBloc(usecaseConfig.getSingleLocalUsecase!)
+        ),
+
+        BlocProvider(
+          create: (BuildContext context) => UserBloc(useCaseUserConfig.loginUserUsecase!, useCaseUserConfig.getAuthTokenUseCase!, useCaseUserConfig.removeTokenUseCase!)
         ),
       ],
       

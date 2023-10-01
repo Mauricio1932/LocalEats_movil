@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'features/user/presentation/locales.dart';
+import 'features/user/presentation/pages/locales.dart';
 // import 'features/users/presentation/pages/login.dart';
 // import 'features/users/presentation/pages/home_page.dart';
 

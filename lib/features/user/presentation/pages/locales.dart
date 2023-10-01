@@ -1,33 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax/iconsax.dart';
+// import 'package:localeats/features/user/presentation/pages/create_account.dart';
+import 'package:localeats/features/user/presentation/pages/profile.dart';
 
-
-import 'bloc/locales_bloc.dart';
-import 'bloc/locales_event.dart';
-import 'bloc/locales_state.dart';
+import '../bloc/bloc_locales/locales_bloc.dart';
+import '../bloc/bloc_locales/locales_event.dart';
+import '../bloc/bloc_locales/locales_state.dart';
+import '../bloc/bloc_login/user_bloc.dart';
+import '../bloc/bloc_login/user_event.dart';
+import '../bloc/bloc_single_local/single_local_bloc.dart';
+import '../bloc/bloc_single_local/single_local_event.dart';
+import 'local_single.dart';
 
 // import '../bloc/locales_state.dart';
 // import '../locales.dart';
 
 class LocalView extends StatefulWidget {
-  // const _LocalView({super.key});
+  const LocalView({super.key});
 
   @override
   State<LocalView> createState() => __LocalViewState();
 }
 
 class __LocalViewState extends State<LocalView> {
-  void _viewLocal(int local) {
-    // context.read<LocalesBloc>().add(LocalView(local));
+  void viewLocal(int localId) {
+    // context.read<LocalesBloc>().add(LocalSingleView(localId));
+    context.read<LocalesSingleBloc>().add(LocalSingleView(localId));
+    localpage(localId);
   }
 
-  void navigateToLocalView() {
-    // Navigator.of(context).pushReplacement(
-    //   MaterialPageRoute(
-    //     builder: (BuildContext context) => const Comentarios(),
-    //   ),
-    // );
+  void localpage(int id) {
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween(
+              begin: const Offset(0, 1),
+              end: Offset.zero,
+            ).animate(animation), // Agrega ".animate(animation)" aquí
+            child: child,
+          );
+        },
+        pageBuilder: (_, __, ___) => SingleViewLocal(id),
+      ),
+    );
   }
 
   @override
@@ -78,16 +96,16 @@ class __LocalViewState extends State<LocalView> {
                   const SizedBox(height: 18),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
+                    children: const [
+                      Icon(
                         Icons.my_location,
                         color: Colors.black,
                         size: 20,
                       ),
-                      const SizedBox(width: 3),
+                      SizedBox(width: 3),
                       Text(
                         "LocalEats",
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.normal,
                           color: Colors.black,
@@ -140,7 +158,7 @@ class __LocalViewState extends State<LocalView> {
             }
 
             return Column(children: [
-              const SizedBox(height:  0),
+              const SizedBox(height: 0),
               const Padding(
                 padding: EdgeInsets.only(top: 18.0, left: 16.0),
                 child: Align(
@@ -164,13 +182,12 @@ class __LocalViewState extends State<LocalView> {
                     scrollDirection: Axis.horizontal,
                     itemCount: state.locales.length,
                     itemBuilder: (BuildContext context, int index) {
-                      // LocalDestacado local = localesDestacados[index];
                       final local = state.locales[index];
+                      // final inLocal = state.localId.contains(local.id);
+
                       return InkWell(
                         onTap: () {
-                          // Acción al hacer clic en la imagen
-                          // Agrega aquí el código que deseas ejecutar al hacer clic en la imagen
-                          navigateToLocalView();
+                          viewLocal(local.id);
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
@@ -321,8 +338,6 @@ class __LocalViewState extends State<LocalView> {
                 ),
               ),
             ]);
-
-            
           },
         ),
       ),
@@ -332,32 +347,77 @@ class __LocalViewState extends State<LocalView> {
 
   int _selectedIndex = 0;
   Widget _createBottonNavigationBar() {
-    return Container(
-      
-      child: BottomNavigationBar(
-        showUnselectedLabels: false,
-        backgroundColor: Colors.grey[300],
-        type: BottomNavigationBarType.fixed,
-        elevation: 0,
-        unselectedItemColor: const Color.fromARGB(255, 0, 0, 0),
-        selectedIconTheme: const IconThemeData(color: Color.fromARGB(255, 80, 80, 80)),
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Iconsax.user),
-            label: 'Exit',
-          ),
-        ],
-        selectedItemColor: Color.fromARGB(255, 0, 0, 0),
-        currentIndex: _selectedIndex,
-      ));
-    
+    return BottomNavigationBar(
+      showUnselectedLabels: false,
+      backgroundColor: Colors.grey[300],
+      type: BottomNavigationBarType.fixed,
+      elevation: 0,
+      unselectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+      selectedIconTheme:
+          const IconThemeData(color: Color.fromARGB(255, 80, 80, 80)),
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Search',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Iconsax.user),
+          label: 'Profile',
+        ),
+      ],
+      selectedItemColor: const Color.fromARGB(255, 0, 0, 0),
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+    );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        // registros();
+        break;
+      case 1:
+        // register();
+        break;
+      case 2:
+        // register();
+        login();
+        break;
+    }
+  }
+
+  void login() {
+    context.read<UserBloc>().add(GetAuthToken());
+    // Profile();
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween(
+              begin:
+                  const Offset(1, 0), // Cambia aquí para iniciar desde arriba
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+        // ... Otros parámetros de PageRouteBuilder);
+
+        pageBuilder: (_, __, ___) => const Profile(),
+      ),
+    );
+  }
+
+  void profile(){
+   
   }
 }
