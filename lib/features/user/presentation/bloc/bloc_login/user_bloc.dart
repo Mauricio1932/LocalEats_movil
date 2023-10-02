@@ -35,7 +35,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       );
     } catch (error) {
       // Podrías hacer un manejo más específico de errores si es necesario
-      print('Error during login: $error');
+      // print('Error during login: $error');
 
       emit(state.copyWith(
         userStatus: UserRequest.requestFailure,
@@ -52,7 +52,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         userStatus: UserRequest.requestInProgress,
       ));
 
-      // var tokenFuture =
+      
       var token = await getAuthTokenUseCase.execute(); // Esto es un Future<String>
       
 
@@ -77,7 +77,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     event,
     Emitter<UserState> emit,
   ) async {
-    print("(Se ejecuto el removej)");
+    print("(Se ejecuto el remove)");
 
     try {
       emit(state.copyWith(

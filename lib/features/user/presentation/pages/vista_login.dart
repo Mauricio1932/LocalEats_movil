@@ -14,6 +14,7 @@ import 'login_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'create_account.dart';
 import 'locales.dart';
+import 'register.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -106,6 +107,7 @@ class _LoginViewState extends State<LoginView> {
     ];
 
     context.read<UserBloc>().add(LoginUserRequest(userData[0]));
+    // context.read<UserBloc>().add(GetAuthToken());
     load_profile();
   }
 
@@ -114,6 +116,15 @@ class _LoginViewState extends State<LoginView> {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) => Profile(),
+      ),
+    );
+  }
+
+  void register_profile() {
+    context.read<UserBloc>().add(GetAuthToken());
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (BuildContext context) => const RegisterView(),
       ),
     );
   }
@@ -239,7 +250,7 @@ class _LoginViewState extends State<LoginView> {
                   ElevatedButton(
                     onPressed: () {
                       loginUser();
-                      print("estoy en login${state.userStatus}");
+                      // print("estoy en login${state.userStatus}");
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<Color>(
@@ -264,7 +275,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 10.0),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {register_profile();},
                     child: const Text(
                       'Registrarme',
                       style: TextStyle(

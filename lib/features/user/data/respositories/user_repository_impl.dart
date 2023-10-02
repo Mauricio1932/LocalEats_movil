@@ -1,4 +1,5 @@
 import '../../domain/entities/login.dart';
+import '../../domain/entities/user.dart';
 import '../../domain/repository/login_repository.dart';
 import '../datasource/user_data_source.dart';
 
@@ -20,5 +21,10 @@ class UserRepositoryImpl implements LoginUserRepository {
   @override
   Future<String> getAuthToken() {
     return apiUserDatasourceImp.getAuthToken();
+  }
+
+  @override
+  Future<List<UserCreate>>userCreate(UserCreate user) {
+    return apiUserDatasourceImp.userCreate(user);
   }
 }

@@ -32,11 +32,17 @@ class _ProfileState extends State<Profile> {
         }
         if (state.userStatus == UserRequest.requestFailure) {
           return const LoginView();
+          // Navigator.of(context).pushReplacement(
+          //   MaterialPageRoute(
+          //     builder: (BuildContext context) =>  LoginView(),
+          //   ),
+          // );
+        }
+        if (state.userStatus == UserRequest.unknown) {
+          context.read<UserBloc>().add(GetAuthToken());
         }
         return Scaffold(
-          
           appBar: AppBar(
-            
             backgroundColor: Colors.grey[300],
             elevation: 0,
             centerTitle: true,
@@ -70,7 +76,7 @@ class _ProfileState extends State<Profile> {
                   color: Colors.black,
                   onPressed: () {
                     context.read<UserBloc>().add(RemoveAuthToken());
-                    // context.read<UserBloc>().add(GetAuthToken());
+                    context.read<UserBloc>().add(GetAuthToken());
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(
                         builder: (BuildContext context) => const LocalView(),

@@ -5,6 +5,8 @@
 
 import 'package:dio/dio.dart';
 import '../../domain/entities/login.dart';
+import '../../domain/entities/user.dart';
+import '../models/create_user_model.dart';
 import '../models/user_login_model.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,10 +15,13 @@ abstract class UserDataSource {
   Future<void> removeAuthToken();
   Future<String> getAuthToken();
   Future<List<UserLoginModel>> login(User user);
+  Future<List<CreateUserLoginModel>> userCreate(UserCreate user);
 }
 
 class ApiUserDatasourceImp implements UserDataSource {
   final String apiUrl = 'https://fakestoreapi.com/auth/login';
+  final String userUrl = 'https://fakestoreapi.com/users';
+
   final Dio dio = Dio();
   late SharedPreferences sharedPreferences;
 
@@ -62,18 +67,51 @@ class ApiUserDatasourceImp implements UserDataSource {
 
   @override
   Future<void> removeAuthToken() async {
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
 
     await sharedPreferences.remove('auth_token');
   }
 
-  // @override
+  @override
   Future<String> getAuthToken() async {
     await Future.delayed(const Duration(seconds: 1));
-    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
     print("se ejecuto el token");
     final token = sharedPreferences.getString('auth_token') ?? '';
     // print("hay token? $token");
     return token;
+  }
+
+  @override
+  Future<List<CreateUserLoginModel>> userCreate(UserCreate user) async {
+    Response response;
+
+    try {
+      response = await dio.post(
+        userUrl,
+        data: {
+          'username': user.username,
+          'password': user.password,
+          'email': user.email,
+        },
+      );
+    } catch (e) {
+      print("Error: $e");
+      throw Exception("Failed to log in");
+    }
+
+    if (response.statusCode == 200) {
+      print("Status 201 OK");
+      // final token = response.data['token'];
+
+      // await saveAuthToken(token);
+
+      return response.data; // Ahora el tipo de retorno es String
+    } else {
+      print("Error en el login, estado: ${response.statusCode}");
+      throw Exception('Failed to log in');
+    }
   }
 }
