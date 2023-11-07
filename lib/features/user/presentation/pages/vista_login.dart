@@ -10,9 +10,7 @@ import '../../domain/entities/login.dart';
 import '../bloc/bloc_login/user_bloc.dart';
 import '../bloc/bloc_login/user_event.dart';
 import '../bloc/bloc_login/user_state.dart';
-import 'login_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'create_account.dart';
 import 'locales.dart';
 import 'register.dart';
 
@@ -28,6 +26,9 @@ class _LoginViewState extends State<LoginView> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   //variable de acceso
   late Future<bool> _access;
+
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _correoController = TextEditingController();
 
   String? _username;
   String? _password;
@@ -78,13 +79,13 @@ class _LoginViewState extends State<LoginView> {
   void _submitForm() async {
     // _persistirSesion();
     // navigateToHomeView();
+    print(_password);
     if (_formKey.currentState != null && _formKey.currentState!.validate()) {
       _formKey.currentState!
           .save(); // Guardar los valores del formulario en las variables
 
       if (_username == null || _password == null) {
         print('Nombre de usuario o contraseña es nulo.');
-        print(_password);
         return; // Sale de la función para evitar errores adicionales
       }
 
@@ -101,9 +102,24 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  void loginUser() {
+  void _enviarFormulario() {
+    if (_formKey.currentState!.validate()) {
+      // La validación pasa, puedes realizar acciones aquí
+      // Por ejemplo, enviar datos al servidor
+      String password= _passwordController.text;
+      String username = _correoController.text;
+
+      // Puedes hacer lo que necesites con los datos
+      print('password: $password, username: $username');
+      loginUser(password,username);
+    } else {
+      return null;
+    }
+  }
+
+  void loginUser(pass, user) {
     List<User> userData = [
-      User(password: '83r5^_', username: 'mor_2314', token: ''),
+      User(password: pass, username: user, token: ''),
     ];
 
     context.read<UserBloc>().add(LoginUserRequest(userData[0]));
@@ -133,161 +149,171 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-      return SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-                onPressed: () {
-                  navigateToHomeView();
-                },
+      return SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+                  onPressed: () {
+                    navigateToHomeView();
+                  },
+                ),
               ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/logo2.png',
-                    width: 200.0,
-                    height: 200.0,
-                  ),
-                  const SizedBox(height: 20.0),
-                  const Text(
-                    'LocalEats',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: 7.0,
-                    ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: 'Usuario',
-                            prefixIcon: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Icon(Icons.person),
-                            ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor ingresa un usuario';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _username =
-                                value; // Guardar el valor de entrada en _username
-                          },
-                        ),
-                        const SizedBox(height: 10.0),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextFormField(
-                                obscureText: true,
-                                decoration: const InputDecoration(
-                                  labelText: 'Contraseña',
-                                  prefixIcon: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Icon(Icons.lock),
-                                  ),
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Por favor ingresa una contraseña';
-                                  }
-                                  return null;
-                                },
-                                onSaved: (value) {
-                                  _password =
-                                      value; // Guardar el valor de entrada en _password
-                                },
-                              ),
-                              const SizedBox(height: 10.0),
-                              GestureDetector(
-                                onTap: () {
-                                  // Acción al presionar el texto "Forgot Password?"
-                                },
-                                child: const Text(
-                                  'Forgot Password?',
-                                  style: TextStyle(
-                                    color: Color.fromARGB(255, 93, 93, 93),
-                                    fontSize: 13.0,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      loginUser();
-                      // print("estoy en login${state.userStatus}");
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color.fromARGB(255, 93, 93, 93),
-                      ),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                    ),
-                    child: Container(
+              Container(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/logo2.png',
                       width: 200.0,
-                      padding: const EdgeInsets.symmetric(vertical: 10.0),
-                      child: const Center(
-                        child: Text(
-                          'Iniciar sesión',
-                          style: TextStyle(fontSize: 16.0),
+                      height: 200.0,
+                    ),
+                    const SizedBox(height: 20.0),
+                    const Text(
+                      'LocalEats',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: 7.0,
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _correoController,
+                            decoration: const InputDecoration(
+                              labelText: 'Usuario',
+                              prefixIcon: Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(Icons.person),
+                              ),
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor ingresa un usuario';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _username =
+                                  value; // Guardar el valor de entrada en _username
+                            },
+                          ),
+                          const SizedBox(height: 10.0),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                TextFormField(
+                                  controller: _passwordController,
+                                  obscureText: true,
+                                  decoration: const InputDecoration(
+                                    labelText: 'Contraseña',
+                                    prefixIcon: Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(Icons.lock),
+                                    ),
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.grey),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.blue),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Por favor ingresa una contraseña';
+                                    }
+                                    return null;
+                                  },
+                                  onSaved: (value) {
+                                    _password =
+                                        value; // Guardar el valor de entrada en _password
+                                  },
+                                ),
+                                const SizedBox(height: 10.0),
+                                GestureDetector(
+                                  onTap: () {
+                                    // Acción al presionar el texto "Forgot Password?"
+                                  },
+                                  child: const Text(
+                                    'Forgot Password?',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 93, 93, 93),
+                                      fontSize: 13.0,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20.0),
+                    ElevatedButton(
+                      onPressed: () {
+                        // loginUser();
+                        _enviarFormulario();
+                        // print("estoy en login${state.userStatus}");
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color.fromARGB(255, 93, 93, 93),
+                        ),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                        ),
+                      ),
+                      child: Container(
+                        width: 200.0,
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: const Center(
+                          child: Text(
+                            'Iniciar sesión',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10.0),
-                  GestureDetector(
-                    onTap: () {register_profile();},
-                    child: const Text(
-                      'Registrarme',
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 93, 93, 93),
-                        fontSize: 14.0,
+                    const SizedBox(height: 10.0),
+                    GestureDetector(
+                      onTap: () {
+                        register_profile();
+                      },
+                      child: const Text(
+                        'Registrarme',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 93, 93, 93),
+                          fontSize: 14.0,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }));

@@ -1,52 +1,62 @@
 import 'package:localeats/features/locales/domain/entities/local.dart';
 
+//  "namelocal": "Ciudad Bocado",
+//   "imagenn": "3.jpg",
+//   "genero": "luis.cruz@gmail.com",
+//   "descripcion": "1234",
+//   "menu": "1234"
 class LocalModel extends Local {
   LocalModel({
     required int id,
-    required String title,
-    required String image,
+    required String namelocal,
+    required String imagen,
     // required String price,
-    required String description,
-    required String category,
+    required String genero,
+    required String descripcion,
+    required String menu,
   }) : super(
           id: id,
-          title: title,
-          image: image,
+          namelocal: namelocal,
+          imagen: imagen,
           // price: price,
-          description: description,
-          category: category,
+          genero: genero,
+          descripcion: descripcion,
+          menu:menu,
         );
 
   factory LocalModel.fromJson(Map<String, dynamic> json) {
     return LocalModel(
       id: json['id'],
-      title: json['title'],
-      image: json['image'],
+      namelocal: json['namelocal'],
+      imagen: json['imagen'],
       // price: json['price'],
-      description: json['description'],
-      category: json['category'],
+      genero: json['genero'],
+      descripcion: json['descripcion'],
+      menu: json['menu'],
     );
   }
 
   factory LocalModel.fromEntity(Local local) {
     return LocalModel(
       id: local.id,
-      title: local.title,
-      image: local.image,
+      namelocal: local.namelocal,
+      imagen: local.imagen,
       // price: local.price,
-      description: local.description,
-      category: local.category,
+      genero: local.genero,
+      descripcion: local.descripcion,
+      menu: local.menu
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'title': title,
-      'image': image,
+      'namelocal': namelocal,
+      'imagen': imagen,
       // 'price': price,
-      'description': description,
-      'category': category,
+      'genero': genero,
+      'descripcion': descripcion,
+      'menu': menu,
     };
   }
 }

@@ -65,7 +65,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
               children: [
                 Image.network(
                   local
-                      .image, // Reemplaza con la URL de la imagen que desees cargar
+                      .imagen, // Reemplaza con la URL de la imagen que desees cargar
                   height: 200.0, // Altura de la imagen en píxeles
                   fit: BoxFit
                       .contain, // Ajusta la imagen para que llene el contenedor
@@ -122,7 +122,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                 child: Column(
                   children: [
                     Text(
-                      local.title,
+                      local.namelocal,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: const TextStyle(
@@ -143,7 +143,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                 child: Column(
                   children: [
                     Text(
-                      local.category,
+                      local.genero,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       style: const TextStyle(
@@ -169,7 +169,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                       child: Column(
                         children: [
                           Text(
-                            local.description,
+                            local.descripcion,
                             overflow: TextOverflow.fade,
                             maxLines: 4,
                             style: const TextStyle(
@@ -196,10 +196,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                 right: 10, // Ajusta la distancia desde la derecha
                 child: ElevatedButton(
                   onPressed: () {
-                    // context
-                    //     .read<LocalesSingleBloc>()
-                    //     .add(DeleteViewLocal(local.id));
-
+                    
                     var localId = widget.id;
 
                     context

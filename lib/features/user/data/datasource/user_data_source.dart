@@ -19,8 +19,8 @@ abstract class UserDataSource {
 }
 
 class ApiUserDatasourceImp implements UserDataSource {
-  final String apiUrl = 'https://fakestoreapi.com/auth/login';
-  final String userUrl = 'https://fakestoreapi.com/users';
+  final String apiUrl = 'http://10.11.2.155:3000/api/login/login';
+  final String userUrl = 'http://10.11.2.155:3000/api/login/create';
 
   final Dio dio = Dio();
   late SharedPreferences sharedPreferences;
@@ -33,8 +33,8 @@ class ApiUserDatasourceImp implements UserDataSource {
       response = await dio.post(
         apiUrl,
         data: {
-          'username': user.username,
-          'password': user.password,
+          'name': user.username,
+          'pass': user.password,
         },
       );
     } catch (e) {
@@ -42,11 +42,11 @@ class ApiUserDatasourceImp implements UserDataSource {
       throw Exception("Failed to log in");
     }
 
+    print('token ${response.data}');
     if (response.statusCode == 200) {
       print("Status 200 OK");
-      final token = response.data['token'];
+      final token = response.data['data']['token'];
       await saveAuthToken(token);
-
       return token; // Ahora el tipo de retorno es String
     } else {
       print("Error en el login, estado: ${response.statusCode}");
@@ -87,22 +87,23 @@ class ApiUserDatasourceImp implements UserDataSource {
   @override
   Future<List<CreateUserLoginModel>> userCreate(UserCreate user) async {
     Response response;
-
+    print("object");
     try {
       response = await dio.post(
         userUrl,
         data: {
-          'username': user.username,
-          'password': user.password,
+          'name': user.name,
+          'pass': user.pass,
           'email': user.email,
+          'telefono': user.telefono,
         },
       );
+      print("Respinse $response");
     } catch (e) {
       print("Error: $e");
       throw Exception("Failed to log in");
     }
-
-    if (response.statusCode == 200) {
+    if (response.statusCode == 201) {
       print("Status 201 OK");
       // final token = response.data['token'];
 

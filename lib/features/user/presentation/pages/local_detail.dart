@@ -19,7 +19,7 @@ class LocalDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              local.title,
+              local.namelocal,
               style: TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
@@ -27,7 +27,7 @@ class LocalDetailPage extends StatelessWidget {
             ),
             SizedBox(height: 16.0),
             Image.network(
-              local.image,
+              local.imagen,
               width: double.infinity,
               height: 200.0,
               fit: BoxFit.cover,
@@ -41,12 +41,12 @@ class LocalDetailPage extends StatelessWidget {
               ),
             ),
             Text(
-              local.description,
+              local.descripcion,
               style: TextStyle(fontSize: 16.0),
             ),
             SizedBox(height: 16.0),
             Text(
-              'Categoría: ${local.category}',
+              'Categoría: ${local.genero}',
               style: TextStyle(fontSize: 16.0),
             ),
           ],

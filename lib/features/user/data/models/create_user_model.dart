@@ -3,36 +3,41 @@ import '../../domain/entities/user.dart';
 
 class CreateUserLoginModel extends UserCreate {
   CreateUserLoginModel({
-    required String username,
-    required String password,
+    required String name,
+    required String pass,
     required String email,
+    required String telefono,
   }) : super(
-          username: username,
-          password: password,
+          name: name,
+          pass: pass,
           email: email,
+          telefono: telefono,
         );
 
   factory CreateUserLoginModel.fromJson(Map<String, dynamic> json) {
     return CreateUserLoginModel(
-      username: json['username'],
-      password: json['password'],
+      name: json['name'],
+      pass: json['pass'],
       email: json['email'],
+      telefono: json['telefono'],
     );
   }
 
   factory CreateUserLoginModel.fromEntity(UserCreate user) {
     return CreateUserLoginModel(
-      username: user.username,
-      password: user.password,
+      name: user.name,
+      pass: user.pass,
       email: user.email,
+      telefono: user.telefono,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'username': username,
-      'password': password,
+      'name': name,
+      'pass': pass,
       'email': email,
+      'telefono': telefono,
     };
   }
 }

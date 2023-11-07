@@ -26,6 +26,7 @@ class LocalView extends StatefulWidget {
 class __LocalViewState extends State<LocalView> {
   void viewLocal(int localId) {
     // context.read<LocalesBloc>().add(LocalSingleView(localId));
+    print('ese es el id: $localId');
     context.read<LocalesSingleBloc>().add(LocalSingleView(localId));
     localpage(localId);
   }
@@ -201,9 +202,9 @@ class __LocalViewState extends State<LocalView> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12),
                                     image: DecorationImage(
-                                      image: NetworkImage(local
-                                          .image), // Utiliza NetworkImage para cargar la imagen desde la red
-                                      fit: BoxFit.contain,
+                                      // http://localhost:3000/api/local/view_img?img1=2.jpg
+                                      image: NetworkImage('http://10.11.2.155:3000/api/local/view_img?img1=${local.imagen}',), // Utiliza NetworkImage para cargar la imagen desde la red
+                                      fit: BoxFit.cover,
                                     ),
                                   ),
                                   child: Material(
@@ -221,7 +222,7 @@ class __LocalViewState extends State<LocalView> {
                                   width: deviceWidth * 0.8,
                                   padding: const EdgeInsets.all(3.0),
                                   child: Text(
-                                    local.title,
+                                    local.namelocal,
                                     style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
@@ -236,7 +237,7 @@ class __LocalViewState extends State<LocalView> {
                                   width: deviceWidth * 0.8,
                                   padding: const EdgeInsets.all(0.0),
                                   child: Text(
-                                    local.title,
+                                    local.genero,
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 12,
@@ -294,7 +295,7 @@ class __LocalViewState extends State<LocalView> {
                                   borderRadius: BorderRadius.circular(12),
                                   image: DecorationImage(
                                     // image: AssetImage(local.imagen),
-                                    image: NetworkImage(local.image),
+                                    image: NetworkImage(local.imagen),
                                     fit: BoxFit.contain,
                                   ),
                                 ),
@@ -303,9 +304,9 @@ class __LocalViewState extends State<LocalView> {
                               Container(
                                 width: deviceWidth * 0.8,
                                 padding: const EdgeInsets.all(3.0),
-                                child: Text(
+                                child: const Text(
                                   "local.texto",
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black,

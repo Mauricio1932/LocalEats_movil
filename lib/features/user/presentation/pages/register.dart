@@ -19,6 +19,7 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController _nombreUsuarioController = TextEditingController();
   TextEditingController _telefonoController = TextEditingController();
   TextEditingController _correoElectronicoController = TextEditingController();
@@ -47,23 +48,17 @@ class _RegisterViewState extends State<RegisterView> {
     String correoElectronico = _correoElectronicoController.text;
     String contrasena = _contrasenaController.text;
 
-    // print("Nombre de Usuario: $nombreUsuario");
-    // print("Teléfono: $telefono");
-    // print("Correo Electrónico: $correoElectronico");
-    // print("Contraseña: $contrasena");
+    print("Nombre de Usuario: $nombreUsuario");
+    print("Teléfono: $telefono");
+    print("Correo Electrónico: $correoElectronico");
+    print("Contraseña: $contrasena");
 
     List<UserCreate> userData = [
       UserCreate(
-          password: '83r5^_', username: 'mor_2314', email: 'John@gmail.com'),
+          pass: contrasena, name: nombreUsuario, email: correoElectronico, telefono: telefono),
     ];
 
     context.read<CreateUserBloc>().add(CreateUserRequest(userData[0]));
-
-    // if (_acceptTerms) {
-    //   print("Términos y condiciones aceptados");
-    // } else {
-    //   print("Debes aceptar los términos y condiciones");
-    // }
   }
 
   // String nombreUsuario = _nombreUsuarioController.text;
@@ -124,11 +119,10 @@ class _RegisterViewState extends State<RegisterView> {
     return BlocBuilder<CreateUserBloc, CreateState>(builder: (context, state) {
       if (state.userStatus == UserRequest.requestSuccess) {
         return const LoginView();
-       
       }
       if (state.userStatus == UserRequest.requestInProgress) {
         // return const Center(child: CircularProgressIndicator());
-        
+
         // Navigator.of(context).pushReplacement(
         //   MaterialPageRoute(
         //     builder: (BuildContext context) => LoginView(),
@@ -137,94 +131,120 @@ class _RegisterViewState extends State<RegisterView> {
         // return LoginView();
       }
       // if (state.userStatus == UserRequest.requestFailure) {
-      //   // return 
+      //   // return
       // }
       return Scaffold(
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-                  onPressed: _regresar,
+        body: SingleChildScrollView(
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+                    onPressed: _regresar,
+                  ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/logo2.png',
-                      width: 150.0,
-                      height: 150.0,
-                    ),
-                    const SizedBox(height: 20.0),
-                    const Text(
-                      'LocalEats',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 7.0,
+                Container(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/logo2.png',
+                        width: 150.0,
+                        height: 150.0,
                       ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    TextField(
-                      controller: _nombreUsuarioController,
-                      decoration: const InputDecoration(
-                        labelText: 'Usuario',
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.person),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                      const SizedBox(height: 20.0),
+                      const Text(
+                        'LocalEats',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 7.0,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    TextField(
-                      controller: _telefonoController,
-                      decoration: const InputDecoration(
-                        labelText: 'Teléfono',
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.phone),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
+                      const SizedBox(height: 20.0),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              controller: _nombreUsuarioController,
+                              decoration: const InputDecoration(
+                                labelText: 'Usuario',
+                                prefixIcon: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.person),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'El campo no puede estar vacio!';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 20.0),
+                            TextFormField(
+                              controller: _telefonoController,
+                                 keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                labelText: 'Teléfono',
+                                prefixIcon: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.phone),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'El campo no puede estar vacio!';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 20.0),
+                            TextFormField(
+                              controller: _correoElectronicoController,
+                              decoration: const InputDecoration(
+                                labelText: 'Correo Electrónico',
+                                prefixIcon: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Icon(Icons.mail),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.grey),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(color: Colors.blue),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'El campo no puede estar vacio!';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    TextField(
-                      controller: _correoElectronicoController,
-                      decoration: const InputDecoration(
-                        labelText: 'Correo Electrónico',
-                        prefixIcon: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(Icons.mail),
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: TextField(
+                      const SizedBox(height: 10.0),
+
+                      TextFormField(
                         controller: _contrasenaController,
                         obscureText: true,
                         decoration: const InputDecoration(
@@ -240,54 +260,65 @@ class _RegisterViewState extends State<RegisterView> {
                             borderSide: BorderSide(color: Colors.blue),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'El campo no puede estar vacio!';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    // Row(
-                    //   children: [
-                    //     Checkbox(
-                    //       value: _acceptTerms,
-                    //       onChanged: (value) {
-                    //         setState(() {
-                    //           _acceptTerms = value ?? false;
-                    //         });
-                    //       },
-                    //     ),
-                    //     const Text(
-                    //         'Acepto los términos y condiciones de\nLocalEats'),
-                    //   ],
-                    // ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        enviarFormulario();
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color.fromARGB(255, 93, 93, 93),
+
+                      const SizedBox(height: 10.0),
+                      // Row(
+                      //   children: [
+                      //     Checkbox(
+                      //       value: _acceptTerms,
+                      //       onChanged: (value) {
+                      //         setState(() {
+                      //           _acceptTerms = value ?? false;
+                      //         });
+                      //       },
+                      //     ),
+                      //     const Text(
+                      //         'Acepto los términos y condiciones de\nLocalEats'),
+                      //   ],
+                      // ),
+                      const SizedBox(height: 20.0),
+                      ElevatedButton(
+                        onPressed: () {
+                          // enviarFormulario();
+                          if (_formKey.currentState != null &&
+                              _formKey.currentState!.validate()) {
+                            enviarFormulario();
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color.fromARGB(255, 93, 93, 93),
+                          ),
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                          ),
                         ),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
+                        child: Container(
+                          width: 200.0,
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: const Center(
+                            child: Text(
+                              'Registrarme',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
                           ),
                         ),
                       ),
-                      child: Container(
-                        width: 200.0,
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: const Center(
-                          child: Text(
-                            'Registrarme',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       );

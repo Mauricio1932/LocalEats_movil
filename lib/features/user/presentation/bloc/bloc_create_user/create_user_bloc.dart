@@ -22,7 +22,7 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateState> {
       emit(
         state.copyWith(
           userStatus: UserRequest.requestSuccess,
-          // user: response,
+          user: response,
         ),
       );
     } catch (error) {

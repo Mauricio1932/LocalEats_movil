@@ -1,17 +1,16 @@
 class Local {
   final int id;
-  final String title;
-  final String image;
-  // final String price;
-  final String description;
-  final String category;
-
+  final String namelocal;
+  final String imagen;
+  final String genero;
+  final String descripcion;
+  final String menu;
   Local({
     required this.id,
-    required this.title,
-    required this.image,
-    // required this.price,
-    required this.description,
-    required this.category,
+    required this.namelocal,
+    required this.imagen,
+    required this.genero,
+    required this.descripcion,
+    required this.menu,
   });
 }
