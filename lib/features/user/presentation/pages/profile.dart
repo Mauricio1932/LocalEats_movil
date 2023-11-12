@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localeats/features/user/presentation/pages/create_local.dart';
 // import 'package:localeats/features/user/presentation/pages/login.dart';
 import 'package:localeats/features/user/presentation/pages/vista_login.dart';
 
@@ -147,22 +148,42 @@ class _ProfileState extends State<Profile> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text('Alerta, muy pronto'),
-                    content: Text("Estamos trabajando en eso"),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context); // Cierra la alerta
-                        },
-                        child: Text('OK'),
-                      ),
-                    ],
-                  );
-                },
+              // showDialog(
+              //   context: context,
+              //   builder: (BuildContext context) {
+              //     return AlertDialog(
+              //       title: const Text('Alerta, muy pronto'),
+              //       content: const Text("Estamos trabajando en eso"),
+              //       actions: [
+              //         TextButton(
+              //           onPressed: () {
+              //             Navigator.pop(context); // Cierra la alerta
+              //           },
+              //           child: const Text('OK'),
+              //         ),
+              //       ],
+              //     );
+              //   },
+              // );
+
+              Navigator.pushReplacement(
+                context,
+                PageRouteBuilder(
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                    return SlideTransition(
+                      position: Tween(
+                        begin: const Offset(
+                            1, 0), // Cambia aquí para iniciar desde arriba
+                        end: Offset.zero,
+                      ).animate(animation),
+                      child: child,
+                    );
+                  },
+                  // ... Otros parámetros de PageRouteBuilder);
+
+                  pageBuilder: (_, __, ___) => const CreateLocal(),
+                ),
               );
             },
             backgroundColor: const Color.fromARGB(255, 248, 248, 248),

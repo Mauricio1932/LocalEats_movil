@@ -95,9 +95,9 @@ class __LocalViewState extends State<LocalView> {
                     ),
                   ),
                   const SizedBox(height: 18),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Icon(
                         Icons.my_location,
                         color: Colors.black,

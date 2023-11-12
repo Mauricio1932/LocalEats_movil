@@ -55,64 +55,14 @@ class _RegisterViewState extends State<RegisterView> {
 
     List<UserCreate> userData = [
       UserCreate(
-          pass: contrasena, name: nombreUsuario, email: correoElectronico, telefono: telefono),
+          pass: contrasena,
+          name: nombreUsuario,
+          email: correoElectronico,
+          telefono: telefono),
     ];
 
     context.read<CreateUserBloc>().add(CreateUserRequest(userData[0]));
   }
-
-  // String nombreUsuario = _nombreUsuarioController.text;
-  // String telefono = _telefonoController.text;
-  // String correoElectronico = _correoElectronicoController.text;
-  // String contrasena = _contrasenaController.text;
-
-  // Map<String, String> datosRegistro = {
-  //   "name": nombreUsuario,
-  //   "telefono": telefono,
-  //   "email": correoElectronico,
-  //   "pass": contrasena,
-  // };
-  // }
-
-  // void _mostrarAlertaError(String mensaje) {
-  //   if (defaultTargetPlatform == TargetPlatform.android || kIsWeb) {
-  //     showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: const Text('Error en el registro'),
-  //           content: Text(mensaje),
-  //           actions: <Widget>[
-  //             TextButton(
-  //               child: const Text('Cerrar'),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-  //     showCupertinoDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return CupertinoAlertDialog(
-  //           title: const Text('Error en el registro'),
-  //           content: Text(mensaje),
-  //           actions: <Widget>[
-  //             CupertinoDialogAction(
-  //               child: const Text('Cerrar'),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       },
-  //     );
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +145,7 @@ class _RegisterViewState extends State<RegisterView> {
                             const SizedBox(height: 20.0),
                             TextFormField(
                               controller: _telefonoController,
-                                 keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.number,
                               decoration: const InputDecoration(
                                 labelText: 'Teléfono',
                                 prefixIcon: Padding(

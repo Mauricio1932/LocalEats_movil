@@ -106,12 +106,12 @@ class _LoginViewState extends State<LoginView> {
     if (_formKey.currentState!.validate()) {
       // La validación pasa, puedes realizar acciones aquí
       // Por ejemplo, enviar datos al servidor
-      String password= _passwordController.text;
+      String password = _passwordController.text;
       String username = _correoController.text;
 
       // Puedes hacer lo que necesites con los datos
       print('password: $password, username: $username');
-      loginUser(password,username);
+      loginUser(password, username);
     } else {
       return null;
     }
@@ -201,7 +201,7 @@ class _LoginViewState extends State<LoginView> {
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.blue),
                               ),
-                            ),
+                            ),  
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingresa un usuario';
