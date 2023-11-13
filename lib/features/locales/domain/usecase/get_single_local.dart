@@ -7,7 +7,7 @@ class GetSingleLocalUsecase {
 
   GetSingleLocalUsecase(this.localRepository);
 
-  Future<Local> execute(localId) async {
+  Future<List<Local>> execute(localId) async {
     try {
       // Llama al repositorio para obtener la lista de locales
       final locales = await localRepository.getSingleLocals(localId);
@@ -19,7 +19,7 @@ class GetSingleLocalUsecase {
         throw Exception('La lista de locales está vacía');
       }
     } catch (e) {
-      print('Error al obtener locales: $e');
+      print('Error al obtener locales simple: $e');
       throw e; // Puedes relanzar la excepción si lo prefieres
     }
   }

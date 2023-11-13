@@ -4,14 +4,15 @@ import 'package:http/http.dart' as http;
 
 abstract class LocalApiDatasource {
   Future<List<LocalModel>> getLocals();
-  Future<LocalModel> getSingleLocals(int local);
+  Future<List<LocalModel>> getSingleLocals(int local);
   // Future<void> postAddProduct(Local product);
   // Future<void> putUpdateProduct(Local product);
   // Future<void> deleteProduct(String id);
 }
 
 class ApiLocalDatasourceImp implements LocalApiDatasource {
-  final String apiUrl = 'http://10.11.2.155:3000/api/local/viewAll';
+  final String apiUrl = 'http://192.168.1.71:3000/api/local/viewAll';
+  final String getSingleLocal ='http://192.168.1.71:3000/api/local/view_local/?id=';
 
   @override
   Future<List<LocalModel>> getLocals() async {
@@ -31,16 +32,19 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
   }
 
   @override
-  Future<LocalModel> getSingleLocals(int local) async {
-    final response = await http.get(Uri.parse('$apiUrl/$local'));
+  Future<List<LocalModel>> getSingleLocals(int local) async {
+    // final response = await http.get(Uri.parse('$getSingleLocal/$local'));
+    print('url  $getSingleLocal$local');
+    final response = await http.get(Uri.parse('$getSingleLocal$local'));
 
-      // print("petcion ${local}");
+    // print("petcion ${local}");
     if (response.statusCode == 200) {
-      final dynamic jsonData = jsonDecode(response.body);
+      List<dynamic> body = jsonDecode(response.body);
 
-      final local = LocalModel.fromJson(jsonData);
 
-      return local;
+      final local = body.map((dynamic item) => LocalModel.fromJson(item)).toList();
+
+      return local ;
     } else {
       throw Exception('Failed to load product');
     }
@@ -70,5 +74,4 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
   //   productModel.add(UserModel.fromEntity(product as User) as ProductModel);
   //   sharedPreferences.setString('product', jsonEncode(product));
   // }
-
 }

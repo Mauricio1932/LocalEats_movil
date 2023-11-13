@@ -29,7 +29,7 @@ class LocalesSingleBloc extends Bloc<LocalSingleEvent, LocalSingleState> {
       // print("Response de un local: ${response.title}");
       emit(state.copyWith(
         localesStatus: SingleRequest.requestSuccess,
-        locales: [response],
+        locales: response,
       ));
     } catch (e) {
       emit(state.copyWith(

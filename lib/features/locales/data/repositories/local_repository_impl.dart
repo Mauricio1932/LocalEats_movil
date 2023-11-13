@@ -18,11 +18,9 @@ class LocalRepositoryImpl implements LocalRepository {
   // }
 
   @override
-  Future<Local> getSingleLocals(int localId) async {
+  Future<List<Local>> getSingleLocals(int localId) async {
     return await apiLocalDatasourceImp.getSingleLocals(localId);
   }
-
-
 
   // @override
   // Future<String> createLocal(Local local) async {

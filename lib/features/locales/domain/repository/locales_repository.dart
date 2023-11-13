@@ -8,5 +8,5 @@ abstract class LocalRepository {
   // Future<void> deleteProduct(String productId);
 
   Future<List<Local>> getLocals();
-  Future<Local> getSingleLocals(int localId);
+  Future<List<Local>> getSingleLocals(int localId);
 }
