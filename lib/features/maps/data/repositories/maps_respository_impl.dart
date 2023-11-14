@@ -14,7 +14,7 @@ class MapsRepositoryImpl implements MapsRepository {
   MapsRepositoryImpl({required this.apiMapsDatasourceImp});
 
   @override
-  Future<List<Maps>> getUbicacion() async {
-    return await apiMapsDatasourceImp.getUbicacion();
+  Future<List<Maps>> getUbicacion(data) async {
+    return await apiMapsDatasourceImp.getUbicacion(data);
   }
 }

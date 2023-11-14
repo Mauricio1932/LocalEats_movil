@@ -203,7 +203,7 @@ class __LocalViewState extends State<LocalView> {
                                     borderRadius: BorderRadius.circular(12),
                                     image: DecorationImage(
                                       // http://localhost:3000/api/local/view_img?img1=2.jpg
-                                      image: NetworkImage('http://192.168.1.71:3000/api/local/view_img?img1=${local.imagen}',), // Utiliza NetworkImage para cargar la imagen desde la red
+                                      image: NetworkImage('http://10.11.2.252:3000/api/local/view_img?img1=${local.imagen}',), // Utiliza NetworkImage para cargar la imagen desde la red
                                       fit: BoxFit.cover,
                                     ),
                                   ),

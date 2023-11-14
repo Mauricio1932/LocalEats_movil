@@ -71,7 +71,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Image.network(
-                    'http://192.168.1.71:3000/api/local/view_img?img1=${local.imagen}', // Reemplaza con la URL de la imagen que desees cargar
+                    'http://10.11.2.252:3000/api/local/view_img?img1=${local.imagen}', // Reemplaza con la URL de la imagen que desees cargar
                     height: 250.0, // Altura de la imagen en píxeles
                     fit: BoxFit
                         .cover, // Ajusta la imagen para que llene el contenedor
@@ -94,7 +94,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                         child: TextButton(
                           onPressed: () {
                             // Lógica que se ejecutará cuando se presione el botón
-                            goingToLocation();
+                            goingToLocation(local.id);
                           },
                           style: ButtonStyle(
                             shape: MaterialStateProperty.all<
@@ -300,9 +300,8 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
     );
   }
 
-  void goingToLocation() {
+  void goingToLocation(id) {
     // context.read<LocalesBloc>().add(LocalSingleView(localId));
-    // context.read<LocalesBloc>().add(LocalRequest());
 
     Navigator.push(
       context,
@@ -319,7 +318,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
         },
         // ... Otros parámetros de PageRouteBuilder);
 
-        pageBuilder: (_, __, ___) => const MapsScren(),
+        pageBuilder: (_, __, ___) => MapScreen(),
       ),
     );
   }

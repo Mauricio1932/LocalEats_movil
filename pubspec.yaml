@@ -55,7 +55,7 @@ dependencies:
   quickalert: ^1.0.0
   flutter_map: ^4.0.0
   latlong2: ^0.8.2
-  mapbox_gl: ^0.16.0
+  # mapbox_gl: ^0.16.0
 
 dev_dependencies:
   flutter_test:

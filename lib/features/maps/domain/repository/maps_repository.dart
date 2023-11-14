@@ -1,5 +1,5 @@
 import '../entities/entities.dart';
 
 abstract class MapsRepository {
-  Future<List<Maps>> getUbicacion();
+  Future<List<Maps>> getUbicacion(data);
 }
