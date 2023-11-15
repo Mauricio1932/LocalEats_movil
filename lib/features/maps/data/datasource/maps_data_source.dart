@@ -9,17 +9,20 @@ abstract class LocationApiDatasource {
 }
 
 class ApiMapsDatasourceImp implements LocationApiDatasource {
-  final String getSingleLocal ='http://10.11.2.252:3000/api/local/view_ubi_local?id=2';
+  final String getSingleLocal =
+      'http://192.168.1.117:3000/api/local/view_ubi_local?id=';
 
   @override
   Future<List<MapsModel>> getUbicacion(data) async {
-    final response = await http.get(Uri.parse(getSingleLocal));
+    final response = await http.get(Uri.parse('$getSingleLocal${data.id}'));
 
+    print("Data Maps: ${data.id}");
     if (response.statusCode == 200) {
       print(response.body);
       List<dynamic> body = jsonDecode(response.body);
 
-      final locals = body.map((dynamic item) => MapsModel.fromJson(item)).toList();
+      final locals =
+          body.map((dynamic item) => MapsModel.fromJson(item)).toList();
       // print("locales ${locals}");
       // return Future.value(locals); // Envuelve la lista en un Future
       return locals;

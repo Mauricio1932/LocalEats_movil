@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localeats/features/maps/presentation/pages/maps.dart';
 // import 'package:localeats/features/pdf/view_pdf.dart';
 // import 'package:localeats/features/user/presentation/bloc/bloc_locales/locales_state.dart';
+import '../../../maps/domain/entities/entities.dart';
+import '../../../maps/presentation/bloc/bloc_maps/Mapsbloc.dart';
+import '../../../maps/presentation/bloc/bloc_maps/maps_event.dart';
 import '../../../pdf/pdf_web.dart';
 import '../bloc/bloc_single_local/single_local_bloc.dart';
 import '../bloc/bloc_single_local/single_local_event.dart';
@@ -71,7 +74,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Image.network(
-                    'http://10.11.2.252:3000/api/local/view_img?img1=${local.imagen}', // Reemplaza con la URL de la imagen que desees cargar
+                    'http://192.168.1.117:3000/api/local/view_img?img1=${local.imagen}', // Reemplaza con la URL de la imagen que desees cargar
                     height: 250.0, // Altura de la imagen en píxeles
                     fit: BoxFit
                         .cover, // Ajusta la imagen para que llene el contenedor
@@ -302,7 +305,12 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
 
   void goingToLocation(id) {
     // context.read<LocalesBloc>().add(LocalSingleView(localId));
+    List<Maps> maps = [
+      Maps(id: id, ubicacion: ""),
+    ];
+    context.read<MapsBloc>().add(MapViewRequest(maps[0]));
 
+    
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -318,7 +326,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
         },
         // ... Otros parámetros de PageRouteBuilder);
 
-        pageBuilder: (_, __, ___) => MapScreen(),
+        pageBuilder: (_, __, ___) => MapScreen(id),
       ),
     );
   }

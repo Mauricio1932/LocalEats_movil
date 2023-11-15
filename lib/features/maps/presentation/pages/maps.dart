@@ -15,7 +15,9 @@ const MAPBOX_ACCESS_TOKEN =
     'pk.eyJ1IjoicGl0bWFjIiwiYSI6ImNsY3BpeWxuczJhOTEzbnBlaW5vcnNwNzMifQ.ncTzM4bW-jpq-hUFutnR1g';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  final int id2;
+
+  const MapScreen(this.id2, {Key? key}) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -56,6 +58,7 @@ class _MapScreenState extends State<MapScreen> {
       appBar: AppBar(
         title: const Text("Ubicacion"),
         centerTitle: true,
+        backgroundColor: Colors.black,
       ),
       body: BlocBuilder<MapsBloc, MapsState>(
         builder: (context, state) {
@@ -76,7 +79,7 @@ class _MapScreenState extends State<MapScreen> {
                   OutlinedButton(
                       onPressed: () {
                         List<Maps> maps = [
-                          Maps(id: 1, ubicacion: ""),
+                          Maps(id: widget.id2, ubicacion: ""),
                         ];
                         context.read<MapsBloc>().add(MapViewRequest(maps[0]));
                         print("estatus ${state.ubicacionStatus}");
@@ -101,46 +104,45 @@ class _MapScreenState extends State<MapScreen> {
             // return const CircularProgressIndicator();
 
             List<Maps> userData = [
-              Maps(id: 1, ubicacion: ""),
+              Maps(id: widget.id2, ubicacion: ""),
             ];
             context.read<MapsBloc>().add(MapViewRequest(userData[0]));
           }
           // return Text("Nombre: ${state.ubicacion[0].ubicacion}");
-          // return Text("Ubicación: ${latitud}");
+          // return Text("Ubicación: ${widget.id2}");
 
-            return myPosition == null
-                ? const CircularProgressIndicator()
-                : FlutterMap(
-                    options: MapOptions(
-                        center: myPosition, minZoom: 5, maxZoom: 25, zoom: 18),
-                    nonRotatedChildren: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
-                        additionalOptions: const {
-                          'accessToken': MAPBOX_ACCESS_TOKEN,
-                          'id': 'mapbox/streets-v12'
-                        },
-                      ),
-                      MarkerLayer(
-                        markers: [
-                          Marker(
-                            point: myPosition!,
-                            builder: (context) {
-                              return Container(
-                                child: const Icon(
-                                  Icons.person_pin,
-                                  color: Colors.blueAccent,
-                                  size: 40,
-                                ),
-                              );
-                            },
-                          )
-                        ],
-                      )
-                    ],
-                  );
-          
+          return myPosition == null
+              ? const CircularProgressIndicator()
+              : FlutterMap(
+                  options: MapOptions(
+                      center: myPosition, minZoom: 5, maxZoom: 25, zoom: 18),
+                  nonRotatedChildren: [
+                    TileLayer(
+                      urlTemplate:
+                          'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}',
+                      additionalOptions: const {
+                        'accessToken': MAPBOX_ACCESS_TOKEN,
+                        'id': 'mapbox/streets-v12'
+                      },
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        Marker(
+                          point: myPosition!,
+                          builder: (context) {
+                            return Container(
+                              child: const Icon(
+                                Icons.person_pin,
+                                color: Colors.blueAccent,
+                                size: 40,
+                              ),
+                            );
+                          },
+                        )
+                      ],
+                    )
+                  ],
+                );
         },
       ),
     );
