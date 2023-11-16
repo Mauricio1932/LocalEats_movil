@@ -15,7 +15,9 @@ class MapsBloc extends Bloc<MapsEvent, MapsState> {
     on<MapViewRequest>(_handleViewLocation);
   }
 
-  Future<void> _handleViewLocation(event, Emitter<MapsState> emit) async {
+  Future<void> _handleViewLocation(
+    event, 
+    Emitter<MapsState> emit) async {
       print("al menos bloc");
     try {
       emit(state.copyWith(

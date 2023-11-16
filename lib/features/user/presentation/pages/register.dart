@@ -1,8 +1,4 @@
-import 'package:dio/dio.dart';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart' show kIsWeb, defaultTargetPlatform;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localeats/features/user/presentation/pages/vista_login.dart';
 
@@ -24,7 +20,7 @@ class _RegisterViewState extends State<RegisterView> {
   TextEditingController _telefonoController = TextEditingController();
   TextEditingController _correoElectronicoController = TextEditingController();
   TextEditingController _contrasenaController = TextEditingController();
-  bool _acceptTerms = false;
+  // bool _acceptTerms = false;
 
   void _regresar() {
     Navigator.of(context).pushReplacement(

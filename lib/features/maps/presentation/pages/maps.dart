@@ -112,7 +112,9 @@ class _MapScreenState extends State<MapScreen> {
           // return Text("Ubicación: ${widget.id2}");
 
           return myPosition == null
-              ? const CircularProgressIndicator()
+              ? const Center(
+                child:  CircularProgressIndicator(),
+              )
               : FlutterMap(
                   options: MapOptions(
                       center: myPosition, minZoom: 5, maxZoom: 25, zoom: 18),

@@ -6,7 +6,10 @@ import 'package:localeats/features/maps/presentation/pages/maps.dart';
 import '../../../maps/domain/entities/entities.dart';
 import '../../../maps/presentation/bloc/bloc_maps/Mapsbloc.dart';
 import '../../../maps/presentation/bloc/bloc_maps/maps_event.dart';
-import '../../../pdf/pdf_web.dart';
+import '../../../menu/domain/entities/entities.dart';
+import '../../../menu/presentation/bloc/bloc_menu/menu_bloc.dart';
+import '../../../menu/presentation/bloc/bloc_menu/menu_event.dart';
+import '../../../menu/presentation/pages/menu.dart';
 import '../bloc/bloc_single_local/single_local_bloc.dart';
 import '../bloc/bloc_single_local/single_local_event.dart';
 import '../bloc/bloc_single_local/single_local_state.dart';
@@ -216,7 +219,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                   right: 10, // Ajusta la distancia desde la derecha
                   child: OutlinedButton(
                     onPressed: () {
-                      lookMenu();
+                      lookMenu(local.id);
                       // var localId = widget.id;
 
                       // context
@@ -310,7 +313,6 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
     ];
     context.read<MapsBloc>().add(MapViewRequest(maps[0]));
 
-    
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -331,13 +333,18 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
     );
   }
 
-  void lookMenu() {
+  void lookMenu(id) {
     // MaterialPageRoute(
     //   builder: (context) => PDFScreen(path: remotePDFpath!),
     // );
     // context.read<LocalesBloc>().add(LocalSingleView(localId));
     // context.read<LocalesBloc>().add(LocalRequest());
+    List<Menu> menu = [
+      Menu(id: id, pdf: ''),
+    ];
+    context.read<MenuBloc>().add(GetPdfMenu(menu[0]));
 
+    //insertar evento menu
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -354,7 +361,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
         // ... Otros parámetros de PageRouteBuilder);
 
         pageBuilder: (_, __, ___) => PDFScreen(
-          path: remotePDFUrl,
+          id2: id,
         ),
       ),
     );

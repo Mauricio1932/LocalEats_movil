@@ -14,3 +14,4 @@ class Local {
     required this.menu,
   });
 }
+
