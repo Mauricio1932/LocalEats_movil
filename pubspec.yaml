@@ -57,6 +57,11 @@ dependencies:
   latlong2: ^0.8.2
   # mapbox_gl: ^0.16.0
   infinite_carousel: ^1.0.3
+  fluttertoast:
+  flutter_screenutil: ^5.9.0
+   
+  flutter_styled_toast:
+  snack:
 
 dev_dependencies:
   flutter_test:

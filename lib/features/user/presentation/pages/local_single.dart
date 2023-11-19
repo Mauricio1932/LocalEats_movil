@@ -209,7 +209,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 180),
+                  // const SizedBox(height: 180),
                   // Padding(
                   //   padding: const EdgeInsets.symmetric(
                   //       vertical: 10, horizontal: 20),
@@ -284,28 +284,85 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
               Stack(
                 children: [
                   // Coloca aquí el contenido principal de tu app
-                  Center(
-                    child: Text('Contenido de la aplicación'),
-                  ),
+                  // Center(
+                  //   // child: Text('Contenido de la aplicación'),
+                  // ),
                   // Botones en la parte inferior
                   Positioned(
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    child: Column(
                       children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            // Acción del primer botón
-                          },
-                          child: Text('Botón 1'),
+                        const SizedBox(height: 180),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          child: Positioned(
+                            bottom:
+                                20, // Ajusta la distancia desde la parte inferior
+                            left: 10, // Ajusta la distancia desde la izquierda
+                            right: 10, // Ajusta la distancia desde la derecha
+                            child: OutlinedButton(
+                              onPressed: () {
+                                lookMenu(local.id);
+                                // var localId = widget.id;
+
+                                // context
+                                //     .read<LocalesSingleBloc>()
+                                //     .add(DeleteViewLocal(localId));
+                                // backHome();
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                    color: Colors
+                                        .black), // Ajusta el color del borde
+                              ),
+                              child: Container(
+                                height: 50,
+                                width: 9360,
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  'Ver Menú',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors
+                                        .black, // Ajusta el color del texto
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            // Acción del segundo botón
-                          },
-                          child: Text('Botón 2'),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 20),
+                          child: Positioned(
+                            bottom: 0,
+                            left: 10, // Ajusta la distancia desde la izquierda
+                            right: 10, // Ajusta la distancia desde la derecha
+                            child: ElevatedButton(
+                              onPressed: () {
+                                var localId = widget.id;
+
+                                context
+                                    .read<LocalesSingleBloc>()
+                                    .add(DeleteViewLocal(localId));
+                                backHome();
+                              },
+                              style: ButtonStyle(
+                                minimumSize: MaterialStateProperty.all(
+                                    const Size(9360, 50)),
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.black),
+                                textStyle: MaterialStateProperty.all<TextStyle>(
+                                  const TextStyle(fontSize: 16),
+                                ),
+                              ),
+                              child: const Text('Cerrar'),
+                            ),
+                          ),
                         ),
                       ],
                     ),

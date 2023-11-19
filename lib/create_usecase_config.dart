@@ -1,21 +1,17 @@
-import 'features/locales/data/datasourses/locales_data_sourse.dart';
-import 'features/locales/data/repositories/local_repository_impl.dart';
-import 'features/locales/domain/usecase/get_local_usecases.dart';
-import 'features/locales/domain/usecase/get_single_local.dart';
+import 'features/user/data/datasource/user_data_source.dart';
+import 'features/user/data/respositories/user_repository_impl.dart';
+import 'features/user/domain/usecase/create_user_case.dart';
 
-class UsecaseLocalesConfig {
-  ApiLocalDatasourceImp? apiLocalDatasourceImp;
-  LocalRepositoryImpl? localRepositoryImpl;
+class UseCaseCrearUserConfig {
+  ApiUserDatasourceImp? apiUserDatasourceImp;
+  UserRepositoryImpl? userRepositoryImpl;
 
-  GetLocalUsecase? getLocalUsecase;
-  GetSingleLocalUsecase? getSingleLocalUsecase;
+  USerCreateUseCase? uSerCreateUseCase;
 
-  UsecaseLocalesConfig() {
-    apiLocalDatasourceImp = ApiLocalDatasourceImp();
-    localRepositoryImpl = LocalRepositoryImpl(apiLocalDatasourceImp: apiLocalDatasourceImp!);
+  UseCaseCrearUserConfig() {
+    apiUserDatasourceImp = ApiUserDatasourceImp();
+    userRepositoryImpl = UserRepositoryImpl(apiUserDatasourceImp: apiUserDatasourceImp!);
 
-    getLocalUsecase = GetLocalUsecase(localRepositoryImpl!);
-    getSingleLocalUsecase = GetSingleLocalUsecase(localRepositoryImpl!);
-    
+    uSerCreateUseCase = USerCreateUseCase(userRepositoryImpl!);
   }
 }

@@ -1,3 +1,5 @@
+import 'package:localeats/features/locales/domain/entities/new_local_entities.dart';
+
 import '../../domain/entities/local.dart';
 import '../../domain/repository/locales_repository.dart';
 import '../datasourses/locales_data_sourse.dart';
@@ -22,10 +24,10 @@ class LocalRepositoryImpl implements LocalRepository {
     return await apiLocalDatasourceImp.getSingleLocals(localId);
   }
 
-  // @override
-  // Future<String> createLocal(Local local) async {
-  //   return await userLocalDataSource.createLocal(local);
-  // }
+  @override
+  Future<Local> createLocal(NewLocal local) async {
+    return await apiLocalDatasourceImp.createLocal(local);
+  }
 
   // @override
   // Future<String> updateLocal(Local local) async {

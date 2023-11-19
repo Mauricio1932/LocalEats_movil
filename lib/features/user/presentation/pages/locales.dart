@@ -135,36 +135,36 @@ class __LocalViewState extends State<LocalView> {
           ],
         ),
       ),
-      body:
-       NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverToBoxAdapter(
-              child: BlocBuilder<LocalesBloc, LocalesState>(
-                builder: (context, state) {
-                  if (state.localesStatus == LocalesRequest.requestInProgress) {
-                    return const CircularProgressIndicator();
-                  }
-                  if (state.localesStatus == LocalesRequest.requestFailure) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Problem loading products'),
-                        const SizedBox(height: 10),
-                        OutlinedButton(
-                          onPressed: () {
-                            context.read<LocalesBloc>().add(LocalRequest());
-                          },
-                          child: const Text('Try again'),
-                        ),
-                      ],
-                    );
-                  }
-                  if (state.localesStatus == LocalesRequest.unknown) {
-                    context.read<LocalesBloc>().add(LocalRequest());
-                  }
-
-                  return Column(
+      body: BlocBuilder<LocalesBloc, LocalesState>(
+        builder: (context, state) {
+          if (state.localesStatus == LocalesRequest.requestInProgress) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state.localesStatus == LocalesRequest.requestFailure) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Problem loading products'),
+                  const SizedBox(height: 10),
+                  OutlinedButton(
+                    onPressed: () {
+                      context.read<LocalesBloc>().add(LocalRequest());
+                    },
+                    child: const Text('Try again'),
+                  ),
+                ],
+              ),
+            );
+          }
+          if (state.localesStatus == LocalesRequest.unknown) {
+            context.read<LocalesBloc>().add(LocalRequest());
+          }
+          return NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                SliverToBoxAdapter(
+                  child: Column(
                     children: [
                       const SizedBox(height: 15),
                       Padding(
@@ -277,117 +277,118 @@ class __LocalViewState extends State<LocalView> {
                         },
                       ),
                     ],
+                  ),
+                )
+              ];
+            },
+            body: Center(
+              child: BlocBuilder<LocalesBloc, LocalesState>(
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5, left: 15),
+                        child: Column(
+                          children: [
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: const Text(
+                                'Todos los locales',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                ),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        // Agregado el Expanded
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          itemCount: state.locales.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final local = state.locales[index];
+
+                            return Padding(
+                              padding: const EdgeInsets.all(20.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: const Color.fromRGBO(
+                                      193, 193, 193, 0.354),
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      width: double.infinity,
+                                      height: 140,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                            'http://192.168.1.69:3000/api/local/view_img?img1=${local.imagen}',
+                                          ),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Container(
+                                      padding: const EdgeInsets.only(left: 5),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              local.namelocal,
+                                              style: const TextStyle(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          Container(
+                                            alignment: Alignment.centerLeft,
+                                            padding: const EdgeInsets.all(0.0),
+                                            child: Text(
+                                              local.genero,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                                color: Color(0xFF4B4A4A),
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 2,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   );
                 },
               ),
             ),
-          ];
+          );
         },
-        body: Center(
-          child: BlocBuilder<LocalesBloc, LocalesState>(
-            builder: (context, state) {
-              return Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, left: 15),
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.centerLeft,
-                          child: const Text(
-                            'Todos los locales',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    // Agregado el Expanded
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      itemCount: state.locales.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final local = state.locales[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: const Color.fromRGBO(193, 193, 193, 0.354),
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: double.infinity,
-                                  height: 140,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(12),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                        'http://192.168.1.69:3000/api/local/view_img?img1=${local.imagen}',
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Container(
-                                  padding: const EdgeInsets.only(left: 5),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          local.namelocal,
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Container(
-                                        alignment: Alignment.centerLeft,
-                                        padding: const EdgeInsets.all(0.0),
-                                        child: Text(
-                                          local.genero,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13,
-                                            color: Color(0xFF4B4A4A),
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 2,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
       ),
       bottomNavigationBar: _createBottonNavigationBar(),
     );
@@ -445,7 +446,7 @@ class __LocalViewState extends State<LocalView> {
   void login() {
     context.read<UserBloc>().add(GetAuthToken());
     // Profile();
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
       PageRouteBuilder(
         transitionsBuilder: (context, animation, secondaryAnimation, child) {

@@ -3,9 +3,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localeats/features/locales/domain/entities/new_local_entities.dart';
+import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_bloc.dart';
+import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_event.dart';
+import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_state.dart';
+import 'package:localeats/features/user/presentation/pages/local_status.dart';
 import 'package:localeats/features/user/presentation/pages/profile.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
+// import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:quickalert/quickalert.dart';
 // import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -35,25 +43,30 @@ class _CreateLocalState extends State<CreateLocal> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // leading: null,
+        // automaticallyImplyLeading: false,
         backgroundColor: Colors.grey[300],
         elevation: 0,
         centerTitle: true,
-        title: Row(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          color: Colors.black,
+          onPressed: () {
+            // Lógica para manejar el botón de retroceso aquí
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Profile(),
+              ),
+            );
+          },
+        ),
+
+        iconTheme: const IconThemeData(color: Colors.black),
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              color: Colors.black,
-              onPressed: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => const Profile(),
-                  ),
-                );
-              },
-            ),
-            // Spacer()
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(left: 70, right: 60),
               child: Text(
                 'Upload bussnises',
@@ -67,194 +80,239 @@ class _CreateLocalState extends State<CreateLocal> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: Column(
-                children: [
-                  if (selectedFile != null)
-                    Image.file(
-                      selectedFile!,
-                      width: 350,
-                      height: 300,
-                    ),
-                  if (selectedFile == null)
-                    Image.asset(
-                      'assets/notimage.jpg', // Reemplaza con la ruta correcta de tu imagen local
-                      width: 300,
-                      height: 240,
-                    )
-                ],
-              ),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          style: const TextStyle(
-                              color:
-                                  Colors.black), // Color del texto de entrada
-                          controller: _nameLocalFieldController,
-                          decoration: const InputDecoration(
-                            suffixIcon: Icon(Icons.business_sharp),
-                            labelText: 'Nombre del Negocio',
-                            labelStyle: TextStyle(color: Colors.black),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors
-                                      .black), // Borde cuando está enfocado
-                            ),
-                          ),
+      body: BlocBuilder<CreateLocalBloc, CreateLocalState>(
+        builder: (context, state) {
+          // if (state.newLocalStatus == LocalRequest.unknown) {
+          //   return ScreenUtilInit(
+          //     designSize: const Size(360, 690),
+          //     minTextAdapt: true,
+          //     splitScreenMode: true,
+          //     // Use builder only if you need to use library outside ScreenUtilInit context
+          //     builder: (_, child) {
+          //       return MaterialApp(
+          //         debugShowCheckedModeBanner: false,
+          //         title: 'First Method',
+          //         // You can use the library anywhere in the app even in theme
+          //         theme: ThemeData(
+          //           primarySwatch: Colors.blue,
+          //           textTheme:
+          //               Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
+          //         ),
+          //         home: child,
+          //       );
+          //     },
+          //   );
+          // }
+          // if (state.newLocalStatus == LocalRequest.requestSuccess) {
+          //   // print("Si se ejcuto en el method");
+          //   return AlertDialog(
+          //     title: const Text('Succes!'),
+          //     content: const Text('La informacion se subio con exito'),
+          //     actions: [
+          //       OutlinedButton(
+          //         onPressed: () {
+          //           Navigator.of(context).pop(); // Cierra el AlertDialog
+          //         },
+          //         child: const Text('Volver'),
+          //       ),
+          //     ],
+          //   );
+          // }
 
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, ingrese el nombre del negocio.';
-                            }
-                            return null;
-                          },
-                        ),
-                        TextFormField(
-                          style: const TextStyle(
-                              color:
-                                  Colors.black), // Color del texto de entrada
-                          controller: _genero,
-                          decoration: const InputDecoration(
-                            suffixIcon: Icon(Icons.category),
-                            labelText: 'Genero',
-                            labelStyle: TextStyle(color: Colors.black),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors
-                                      .black), // Borde cuando está enfocado
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, ingrese el Categoria del negocio.';
-                            }
-                            return null;
-                          },
-                        ),
-                        TextFormField(
-                          style: const TextStyle(
-                              color:
-                                  Colors.black), // Color del texto de entrada
-                          controller: _descripcion,
-                          decoration: const InputDecoration(
-                            suffixIcon: Icon(Icons.description),
-                            labelText: 'Descripción',
-                            labelStyle: TextStyle(color: Colors.black),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors
-                                      .black), // Borde cuando está enfocado
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, ingrese el Descripción del negocio.';
-                            }
-                            return null;
-                          },
-                        ),
-                        TextFormField(
-                          style: const TextStyle(
-                              color:
-                                  Colors.black), // Color del texto de entrada
-                          controller: _ubicacion,
-                          decoration: const InputDecoration(
-                            suffixIcon: Icon(Icons.location_on),
-                            labelText: 'Ubicacion',
-                            labelStyle: TextStyle(color: Colors.black),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors
-                                      .black), // Borde cuando está enfocado
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Por favor, ingrese el ubicacion (cordenadas) del negocio.';
-                            }
-                            return null;
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30.0, vertical: 0),
-                  child: Row(
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Center(
+                  child: Column(
                     children: [
-                      OutlinedButton(
-                        onPressed: _pickFile,
-                        style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.black)
-                            .copyWith(
-                          side: MaterialStateProperty.all(const BorderSide(
-                            color: Colors.grey, // color del borde
-                            width: 1.0, // ancho del borde
-                          )),
-                          minimumSize:
-                              MaterialStateProperty.all(const Size(10, 40)),
-                          textStyle: MaterialStateProperty.all<TextStyle>(
-                            const TextStyle(fontSize: 15, color: Colors.black),
-                          ),
+                      if (selectedFile != null)
+                        Image.file(
+                          selectedFile!,
+                          width: 350,
+                          height: 300,
                         ),
-                        child: const Text('Selecionar Imagen'),
-                      ),
-                      Spacer(),
-                      OutlinedButton(
-                        onPressed: _pickPdf,
-                        style: OutlinedButton.styleFrom(
-                                foregroundColor: Colors.black)
-                            .copyWith(
-                          side: MaterialStateProperty.all(const BorderSide(
-                            color: Colors.grey, // color del borde
-                            width: 1.0, // ancho del borde
-                          )),
-                          minimumSize:
-                              MaterialStateProperty.all(const Size(10, 40)),
-                          textStyle: MaterialStateProperty.all<TextStyle>(
-                            const TextStyle(fontSize: 15, color: Colors.black),
-                          ),
-                        ),
-                        child: const Text('Selecionar Menu "pdf"'),
-                      ),
+                      if (selectedFile == null)
+                        Image.asset(
+                          'assets/notimage.jpg', // Reemplaza con la ruta correcta de tu imagen local
+                          width: 300,
+                          height: 240,
+                        )
                     ],
                   ),
                 ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30.0, vertical: 5),
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.black, // color de fondo
-                        // onPrimary: Colors.white, // color del texto
-                        side: const BorderSide(
-                          color: Colors.grey, // color del borde
-                          width: 1.0, // ancho del borde
+                Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              style: const TextStyle(
+                                  color: Colors
+                                      .black), // Color del texto de entrada
+                              controller: _nameLocalFieldController,
+                              decoration: const InputDecoration(
+                                suffixIcon: Icon(Icons.business_sharp),
+                                labelText: 'Nombre del Negocio',
+                                labelStyle: TextStyle(color: Colors.black),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors
+                                          .black), // Borde cuando está enfocado
+                                ),
+                              ),
+
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor, ingrese el nombre del negocio.';
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              style: const TextStyle(
+                                  color: Colors
+                                      .black), // Color del texto de entrada
+                              controller: _genero,
+                              decoration: const InputDecoration(
+                                suffixIcon: Icon(Icons.category),
+                                labelText: 'Genero',
+                                labelStyle: TextStyle(color: Colors.black),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors
+                                          .black), // Borde cuando está enfocado
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor, ingrese el Categoria del negocio.';
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              style: const TextStyle(
+                                  color: Colors
+                                      .black), // Color del texto de entrada
+                              controller: _descripcion,
+                              decoration: const InputDecoration(
+                                suffixIcon: Icon(Icons.description),
+                                labelText: 'Descripción',
+                                labelStyle: TextStyle(color: Colors.black),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors
+                                          .black), // Borde cuando está enfocado
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor, ingrese el Descripción del negocio.';
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              style: const TextStyle(
+                                  color: Colors
+                                      .black), // Color del texto de entrada
+                              controller: _ubicacion,
+                              decoration: const InputDecoration(
+                                suffixIcon: Icon(Icons.location_on),
+                                labelText: 'Ubicacion',
+                                labelStyle: TextStyle(color: Colors.black),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors
+                                          .black), // Borde cuando está enfocado
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Por favor, ingrese el ubicacion (cordenadas) del negocio.';
+                                }
+                                return null;
+                              },
+                            ),
+                          ],
                         ),
-                        minimumSize: const Size(999, 40),
-                        textStyle: const TextStyle(
-                            fontSize: 16,
-                            color: Color.fromARGB(255, 187, 77, 77)),
                       ),
-                      child: const Text('Publicar'),
-                    ))
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0, vertical: 0),
+                      child: Row(
+                        children: [
+                          OutlinedButton(
+                            onPressed: _pickFile,
+                            style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.black)
+                                .copyWith(
+                              side: MaterialStateProperty.all(const BorderSide(
+                                color: Colors.grey, // color del borde
+                                width: 1.0, // ancho del borde
+                              )),
+                              minimumSize:
+                                  MaterialStateProperty.all(const Size(10, 40)),
+                              textStyle: MaterialStateProperty.all<TextStyle>(
+                                const TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                              ),
+                            ),
+                            child: const Text('Selecionar Imagen'),
+                          ),
+                          const Spacer(),
+                          OutlinedButton(
+                            onPressed: _pickPdf,
+                            style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.black)
+                                .copyWith(
+                              side: MaterialStateProperty.all(const BorderSide(
+                                color: Colors.grey, // color del borde
+                                width: 1.0, // ancho del borde
+                              )),
+                              minimumSize:
+                                  MaterialStateProperty.all(const Size(10, 40)),
+                              textStyle: MaterialStateProperty.all<TextStyle>(
+                                const TextStyle(
+                                    fontSize: 15, color: Colors.black),
+                              ),
+                            ),
+                            child: const Text('Selecionar Menu "pdf"'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 5),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            postLocal();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.black, // color de fondo
+                            // onPrimary: Colors.white, // color del texto
+                            side: const BorderSide(
+                              color: Colors.grey, // color del borde
+                              width: 1.0, // ancho del borde
+                            ),
+                            minimumSize: const Size(999, 40),
+                            textStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Color.fromARGB(255, 187, 77, 77)),
+                          ),
+                          child: const Text('Publicar'),
+                        ))
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -315,5 +373,50 @@ class _CreateLocalState extends State<CreateLocal> {
         );
       }
     }
+  }
+
+  void postLocal() {
+    List<NewLocal> data = [
+      NewLocal(
+        id: 0,
+        namelocal: _nameLocalFieldController.text,
+        genero: _genero.text,
+        descripcion: _descripcion.text,
+        ubicacion: _ubicacion.text,
+        menu: '',
+        imagen2: selectedFile!,
+        imagen: '',
+      ),
+    ];
+
+    context.read<CreateLocalBloc>().add(CreateLocalRequest(data[0]));
+
+    Navigator.push(
+      context,
+      PageRouteBuilder(
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SlideTransition(
+            position: Tween(
+              begin:
+                  const Offset(1, 0), // Cambia aquí para iniciar desde arriba
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+        },
+        // ... Otros parámetros de PageRouteBuilder);
+
+        pageBuilder: (_, __, ___) => const LocalStatus(),
+      ),
+    );
+  }
+
+  Future<void> alert() async {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.error,
+      title: 'Oops...',
+      text: 'No has cargado el archivo esperado, ¡intentalo de nuevo!',
+    );
   }
 }

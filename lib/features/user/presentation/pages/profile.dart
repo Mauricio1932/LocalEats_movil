@@ -44,23 +44,31 @@ class _ProfileState extends State<Profile> {
         }
         return Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back_ios),
+              color: Colors.black,
+              onPressed: () {
+                // Lógica para manejar el botón de retroceso aquí
+                Navigator.pop(context);
+              },
+            ),
             backgroundColor: Colors.grey[300],
             elevation: 0,
             centerTitle: true,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_ios),
-                  color: Colors.black,
-                  onPressed: () {
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const LocalView(),
-                      ),
-                    );
-                  },
-                ),
+                // IconButton(
+                //   icon: const Icon(Icons.arrow_back_ios),
+                //   color: Colors.black,
+                //   onPressed: () {
+                //     Navigator.of(context).pushReplacement(
+                //       MaterialPageRoute(
+                //         builder: (BuildContext context) => const LocalView(),
+                //       ),
+                //     );
+                //   },
+                // ),
                 const Padding(
                   padding: EdgeInsets.only(left: 60, right: 60),
                   child: Text(
@@ -78,11 +86,12 @@ class _ProfileState extends State<Profile> {
                   onPressed: () {
                     context.read<UserBloc>().add(RemoveAuthToken());
                     context.read<UserBloc>().add(GetAuthToken());
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) => const LocalView(),
-                      ),
-                    );
+                    Navigator.pop(context);
+                    // Navigator.of(context).pushReplacement(
+                    //   MaterialPageRoute(
+                    //     builder: (BuildContext context) => const LocalView(),
+                    //   ),
+                    // );
                   },
                 ),
               ],
