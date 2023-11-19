@@ -8,6 +8,7 @@ import '../../domain/entities/login.dart';
 import '../../domain/entities/user.dart';
 import '../models/create_user_model.dart';
 import '../models/user_login_model.dart';
+
 // import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,8 +20,8 @@ abstract class UserDataSource {
 }
 
 class ApiUserDatasourceImp implements UserDataSource {
-  final String apiUrl = 'http://192.168.1.71:3000/api/login/login';
-  final String userUrl = 'http://192.168.1.71:3000/api/login/create';
+  final String apiUrl = 'http://192.168.1.69:3000/api/login/login';
+  final String userUrl = 'http://192.168.1.69:3000/api/login/create';
 
   final Dio dio = Dio();
   late SharedPreferences sharedPreferences;

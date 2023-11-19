@@ -56,6 +56,7 @@ dependencies:
   flutter_map: ^4.0.0
   latlong2: ^0.8.2
   # mapbox_gl: ^0.16.0
+  infinite_carousel: ^1.0.3
 
 dev_dependencies:
   flutter_test:

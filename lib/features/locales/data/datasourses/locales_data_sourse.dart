@@ -11,8 +11,8 @@ abstract class LocalApiDatasource {
 }
 
 class ApiLocalDatasourceImp implements LocalApiDatasource {
-  final String apiUrl = 'http://192.168.1.117:3000/api/local/viewAll';
-  final String getSingleLocal ='http://192.168.1.117:3000/api/local/viewLocalById/?id=';
+  final String apiUrl = 'http://192.168.1.69:3000/api/local/viewAll';
+  final String getSingleLocal ='http://192.168.1.69:3000/api/local/viewLocalById/?id=';
 
   @override
   Future<List<LocalModel>> getLocals() async {

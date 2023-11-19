@@ -12,14 +12,13 @@ abstract class LocationApiDatasource {
 
 class ApiMenuDatasourceImpl implements LocationApiDatasource {
   final String getSingleLocal =
-      'http://192.168.1.117:3000/api/menu/viewAllMenu?localId=';
+      'http://192.168.1.69:3000/api/menu/viewAllMenu?localId=';
 
   @override
   Future<List<MenuModel>> getMenu(data) async {
     final response = await http.get(Uri.parse('$getSingleLocal${data.id}'));
 
-    print("$getSingleLocal${data.id}");
-    print("Data Maps: ${data.id}");
+  
     if (response.statusCode == 200) {
       print(response.body);
       List<dynamic> body = jsonDecode(response.body);
