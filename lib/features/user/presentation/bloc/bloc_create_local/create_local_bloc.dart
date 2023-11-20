@@ -8,13 +8,12 @@ class CreateLocalBloc extends Bloc<CreateLocalEvent, CreateLocalState> {
   PostNewLocalUsecase postNewLocalUsecase;
   CreateLocalBloc(this.postNewLocalUsecase) : super(CreateLocalState()) {
     on<CreateLocalRequest>(_handleCreateLocal);
+    on<ReseteLocal>(_handleReset);
   }
 
-  Future<void> _handleCreateLocal(
-    event,
-    Emitter<CreateLocalState> emit) async {
-      print("se ejecuto");
-    
+  Future<void> _handleCreateLocal(event, Emitter<CreateLocalState> emit) async {
+    print("se ejecuto");
+
     try {
       emit(state.copyWith(
         newLocalStatus: LocalRequest.requestInProgress,
@@ -36,5 +35,16 @@ class CreateLocalBloc extends Bloc<CreateLocalEvent, CreateLocalState> {
         newLocalStatus: LocalRequest.requestFailure,
       ));
     }
+  }
+
+  Future<void> _handleReset(
+    event,
+    Emitter<CreateLocalState> emit,
+  ) async {
+    print("object reset");
+    emit(state.copyWith(
+      newLocalStatus: LocalRequest.unknown,
+      // Otros campos del estado que podrían necesitar ser reseteados
+    ));
   }
 }

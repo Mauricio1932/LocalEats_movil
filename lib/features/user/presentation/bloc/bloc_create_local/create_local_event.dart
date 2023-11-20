@@ -10,3 +10,5 @@ class CreateLocalRequest extends CreateLocalEvent {
   const CreateLocalRequest(this.data);
   final NewLocal data;
 }
+
+class ReseteLocal extends CreateLocalEvent{}

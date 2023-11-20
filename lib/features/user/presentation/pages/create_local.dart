@@ -8,17 +8,14 @@ import 'package:localeats/features/locales/domain/entities/new_local_entities.da
 import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_bloc.dart';
 import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_event.dart';
 import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_state.dart';
-import 'package:localeats/features/user/presentation/pages/local_status.dart';
 import 'package:localeats/features/user/presentation/pages/profile.dart';
 import 'package:file_picker/file_picker.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as path;
 // import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:quickalert/quickalert.dart';
 // import 'package:quickalert/widgets/quickalert_dialog.dart';
-
-// ...
 
 class CreateLocal extends StatefulWidget {
   const CreateLocal({super.key});
@@ -80,239 +77,275 @@ class _CreateLocalState extends State<CreateLocal> {
           ],
         ),
       ),
-      body: BlocBuilder<CreateLocalBloc, CreateLocalState>(
-        builder: (context, state) {
-          // if (state.newLocalStatus == LocalRequest.unknown) {
-          //   return ScreenUtilInit(
-          //     designSize: const Size(360, 690),
-          //     minTextAdapt: true,
-          //     splitScreenMode: true,
-          //     // Use builder only if you need to use library outside ScreenUtilInit context
-          //     builder: (_, child) {
-          //       return MaterialApp(
-          //         debugShowCheckedModeBanner: false,
-          //         title: 'First Method',
-          //         // You can use the library anywhere in the app even in theme
-          //         theme: ThemeData(
-          //           primarySwatch: Colors.blue,
-          //           textTheme:
-          //               Typography.englishLike2018.apply(fontSizeFactor: 1.sp),
-          //         ),
-          //         home: child,
-          //       );
-          //     },
-          //   );
-          // }
-          // if (state.newLocalStatus == LocalRequest.requestSuccess) {
-          //   // print("Si se ejcuto en el method");
-          //   return AlertDialog(
-          //     title: const Text('Succes!'),
-          //     content: const Text('La informacion se subio con exito'),
-          //     actions: [
-          //       OutlinedButton(
-          //         onPressed: () {
-          //           Navigator.of(context).pop(); // Cierra el AlertDialog
-          //         },
-          //         child: const Text('Volver'),
-          //       ),
-          //     ],
-          //   );
-          // }
+      body: BlocListener<CreateLocalBloc, CreateLocalState>(
+        listener: (context, state) {
+          // Escuchamos el estado del Bloc y mostramos un mensaje cuando el contador llega a 3.
 
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                Center(
-                  child: Column(
-                    children: [
-                      if (selectedFile != null)
-                        Image.file(
-                          selectedFile!,
-                          width: 350,
-                          height: 300,
-                        ),
-                      if (selectedFile == null)
+          if (state.newLocalStatus == LocalRequest.requestSuccess) {}
+
+          // print('Estado actual: ${state.newLocalStatus}');
+          // const Center(child: CircularProgressIndicator());
+          if (state.newLocalStatus == LocalRequest.requestInProgress) {
+            const Center(child: CircularProgressIndicator());
+          }
+          if (state.newLocalStatus == LocalRequest.unknown) {
+            const Center(child: CircularProgressIndicator());
+          }
+          if (state.newLocalStatus == LocalRequest.requestFailure) {
+            const Center(child: CircularProgressIndicator());
+          }
+        },
+        child: BlocBuilder<CreateLocalBloc, CreateLocalState>(
+          builder: (context, state) {
+            if (state.newLocalStatus == LocalRequest.requestInProgress) {
+              WidgetsBinding.instance.addPostFrameCallback(
+                (_) {
+                  QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.loading,
+                    title: 'Loading',
+                    text: 'Fetching your data',
+                  );
+                },
+              );
+              Future.delayed(const Duration(seconds: 2), () {
+                // Remover el loading después del retraso
+                Navigator.pop(context);
+                _resetLocalStatus(); // Cambiar el estado a success después de quitar el loading
+              });
+              // _resetLocalStatus();
+            }
+            if (state.newLocalStatus == LocalRequest.requestSuccess) {
+              Future.delayed(const Duration(seconds: 2), () {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.success,
+                    text: 'Transaction Completed Successfully!',
+                  );
+                  _resetLocalStatus();
+                });
+              });
+            }
+            if (state.newLocalStatus == LocalRequest.requestFailure) {
+              Future.delayed(const Duration(seconds: 2), () {
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.error,
+                      title: 'Oops...',
+                      text: 'Sorry, something went wrong',
+                    );
+                    _resetLocalStatus();
+                  },
+                );
+              });
+            }
+            // selectedFile = selectedFile ?? File('assets/notimage.jpg');
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        if (selectedFile != null)
+                          Image.file(
+                            selectedFile!,
+                            width: 350,
+                            height: 300,
+                          ),
+                        if (selectedFile == null)
+                          // Image.file(
+                          //   selectedFile!,
+                          //   width: 350,
+                          //   height: 300,
+                          // ),
                         Image.asset(
                           'assets/notimage.jpg', // Reemplaza con la ruta correcta de tu imagen local
                           width: 300,
                           height: 240,
                         )
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(30.0),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            TextFormField(
-                              style: const TextStyle(
-                                  color: Colors
-                                      .black), // Color del texto de entrada
-                              controller: _nameLocalFieldController,
-                              decoration: const InputDecoration(
-                                suffixIcon: Icon(Icons.business_sharp),
-                                labelText: 'Nombre del Negocio',
-                                labelStyle: TextStyle(color: Colors.black),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors
-                                          .black), // Borde cuando está enfocado
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(30.0),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                style: const TextStyle(
+                                    color: Colors
+                                        .black), // Color del texto de entrada
+                                controller: _nameLocalFieldController,
+                                decoration: const InputDecoration(
+                                  suffixIcon: Icon(Icons.business_sharp),
+                                  labelText: 'Nombre del Negocio',
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .black), // Borde cuando está enfocado
+                                  ),
                                 ),
-                              ),
 
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Por favor, ingrese el nombre del negocio.';
-                                }
-                                return null;
-                              },
-                            ),
-                            TextFormField(
-                              style: const TextStyle(
-                                  color: Colors
-                                      .black), // Color del texto de entrada
-                              controller: _genero,
-                              decoration: const InputDecoration(
-                                suffixIcon: Icon(Icons.category),
-                                labelText: 'Genero',
-                                labelStyle: TextStyle(color: Colors.black),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors
-                                          .black), // Borde cuando está enfocado
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor, ingrese el nombre del negocio.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              TextFormField(
+                                style: const TextStyle(
+                                    color: Colors
+                                        .black), // Color del texto de entrada
+                                controller: _genero,
+                                decoration: const InputDecoration(
+                                  suffixIcon: Icon(Icons.category),
+                                  labelText: 'Genero',
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .black), // Borde cuando está enfocado
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor, ingrese el Categoria del negocio.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              TextFormField(
+                                style: const TextStyle(
+                                    color: Colors
+                                        .black), // Color del texto de entrada
+                                controller: _descripcion,
+                                decoration: const InputDecoration(
+                                  suffixIcon: Icon(Icons.description),
+                                  labelText: 'Descripción',
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .black), // Borde cuando está enfocado
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor, ingrese el Descripción del negocio.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              TextFormField(
+                                style: const TextStyle(
+                                    color: Colors
+                                        .black), // Color del texto de entrada
+                                controller: _ubicacion,
+                                decoration: const InputDecoration(
+                                  suffixIcon: Icon(Icons.location_on),
+                                  labelText: 'Ubicacion',
+                                  labelStyle: TextStyle(color: Colors.black),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors
+                                            .black), // Borde cuando está enfocado
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor, ingrese el ubicacion (cordenadas) del negocio.';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30.0, vertical: 0),
+                        child: Row(
+                          children: [
+                            OutlinedButton(
+                              onPressed: _pickFile,
+                              style: OutlinedButton.styleFrom(
+                                      foregroundColor: Colors.black)
+                                  .copyWith(
+                                side:
+                                    MaterialStateProperty.all(const BorderSide(
+                                  color: Colors.grey, // color del borde
+                                  width: 1.0, // ancho del borde
+                                )),
+                                minimumSize: MaterialStateProperty.all(
+                                    const Size(10, 40)),
+                                textStyle: MaterialStateProperty.all<TextStyle>(
+                                  const TextStyle(
+                                      fontSize: 15, color: Colors.black),
                                 ),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Por favor, ingrese el Categoria del negocio.';
-                                }
-                                return null;
-                              },
+                              child: const Text('Selecionar Imagen'),
                             ),
-                            TextFormField(
-                              style: const TextStyle(
-                                  color: Colors
-                                      .black), // Color del texto de entrada
-                              controller: _descripcion,
-                              decoration: const InputDecoration(
-                                suffixIcon: Icon(Icons.description),
-                                labelText: 'Descripción',
-                                labelStyle: TextStyle(color: Colors.black),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors
-                                          .black), // Borde cuando está enfocado
+                            const Spacer(),
+                            OutlinedButton(
+                              onPressed: _pickPdf,
+                              style: OutlinedButton.styleFrom(
+                                      foregroundColor: Colors.black)
+                                  .copyWith(
+                                side:
+                                    MaterialStateProperty.all(const BorderSide(
+                                  color: Colors.grey, // color del borde
+                                  width: 1.0, // ancho del borde
+                                )),
+                                minimumSize: MaterialStateProperty.all(
+                                    const Size(10, 40)),
+                                textStyle: MaterialStateProperty.all<TextStyle>(
+                                  const TextStyle(
+                                      fontSize: 15, color: Colors.black),
                                 ),
                               ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Por favor, ingrese el Descripción del negocio.';
-                                }
-                                return null;
-                              },
-                            ),
-                            TextFormField(
-                              style: const TextStyle(
-                                  color: Colors
-                                      .black), // Color del texto de entrada
-                              controller: _ubicacion,
-                              decoration: const InputDecoration(
-                                suffixIcon: Icon(Icons.location_on),
-                                labelText: 'Ubicacion',
-                                labelStyle: TextStyle(color: Colors.black),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Colors
-                                          .black), // Borde cuando está enfocado
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Por favor, ingrese el ubicacion (cordenadas) del negocio.';
-                                }
-                                return null;
-                              },
+                              child: const Text('Selecionar Menu "pdf"'),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30.0, vertical: 0),
-                      child: Row(
-                        children: [
-                          OutlinedButton(
-                            onPressed: _pickFile,
-                            style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.black)
-                                .copyWith(
-                              side: MaterialStateProperty.all(const BorderSide(
+                      Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 30.0, vertical: 5),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              postLocal();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              // ignore: deprecated_member_use
+                              primary: Colors.black, // color de fondo
+                              // onPrimary: Colors.white, // color del texto
+                              side: const BorderSide(
                                 color: Colors.grey, // color del borde
                                 width: 1.0, // ancho del borde
-                              )),
-                              minimumSize:
-                                  MaterialStateProperty.all(const Size(10, 40)),
-                              textStyle: MaterialStateProperty.all<TextStyle>(
-                                const TextStyle(
-                                    fontSize: 15, color: Colors.black),
                               ),
+                              minimumSize: const Size(999, 40),
+                              textStyle: const TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 187, 77, 77)),
                             ),
-                            child: const Text('Selecionar Imagen'),
-                          ),
-                          const Spacer(),
-                          OutlinedButton(
-                            onPressed: _pickPdf,
-                            style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.black)
-                                .copyWith(
-                              side: MaterialStateProperty.all(const BorderSide(
-                                color: Colors.grey, // color del borde
-                                width: 1.0, // ancho del borde
-                              )),
-                              minimumSize:
-                                  MaterialStateProperty.all(const Size(10, 40)),
-                              textStyle: MaterialStateProperty.all<TextStyle>(
-                                const TextStyle(
-                                    fontSize: 15, color: Colors.black),
-                              ),
-                            ),
-                            child: const Text('Selecionar Menu "pdf"'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 30.0, vertical: 5),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            postLocal();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.black, // color de fondo
-                            // onPrimary: Colors.white, // color del texto
-                            side: const BorderSide(
-                              color: Colors.grey, // color del borde
-                              width: 1.0, // ancho del borde
-                            ),
-                            minimumSize: const Size(999, 40),
-                            textStyle: const TextStyle(
-                                fontSize: 16,
-                                color: Color.fromARGB(255, 187, 77, 77)),
-                          ),
-                          child: const Text('Publicar'),
-                        ))
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
+                            child: const Text('Publicar'),
+                          ))
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -376,47 +409,32 @@ class _CreateLocalState extends State<CreateLocal> {
   }
 
   void postLocal() {
-    List<NewLocal> data = [
-      NewLocal(
-        id: 0,
-        namelocal: _nameLocalFieldController.text,
-        genero: _genero.text,
-        descripcion: _descripcion.text,
-        ubicacion: _ubicacion.text,
-        menu: '',
-        imagen2: selectedFile!,
-        imagen: '',
-      ),
-    ];
+    if (_formKey.currentState!.validate()) {
+      // Realizar la acción deseada
 
-    context.read<CreateLocalBloc>().add(CreateLocalRequest(data[0]));
+      List<NewLocal> data = [
+        NewLocal(
+          id: 0,
+          namelocal: _nameLocalFieldController.text,
+          genero: _genero.text,
+          descripcion: _descripcion.text,
+          ubicacion: _ubicacion.text,
+          menu: '',
+          imagen2: selectedFile!,
+          imagen: '',
+        ),
+      ];
 
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SlideTransition(
-            position: Tween(
-              begin:
-                  const Offset(1, 0), // Cambia aquí para iniciar desde arriba
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-        },
-        // ... Otros parámetros de PageRouteBuilder);
+      // context.read<CreateLocalBloc>().add(CreateLocalRequest(data[0]));
+      final createLocalBloc = context.read<CreateLocalBloc>();
 
-        pageBuilder: (_, __, ___) => const LocalStatus(),
-      ),
-    );
+      // Agrega el evento para realizar la operación en el Bloc
+      createLocalBloc.add(CreateLocalRequest(data[0]));
+    }
+    // _resetLocalStatus();
   }
 
-  Future<void> alert() async {
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.error,
-      title: 'Oops...',
-      text: 'No has cargado el archivo esperado, ¡intentalo de nuevo!',
-    );
+  void _resetLocalStatus() {
+    context.read<CreateLocalBloc>().add(ReseteLocal());
   }
 }

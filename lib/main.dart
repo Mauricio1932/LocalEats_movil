@@ -61,6 +61,8 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => CreateUserBloc(useCaseCrearUserConfig.uSerCreateUseCase!)
         ),
       ],
+
+      
       
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

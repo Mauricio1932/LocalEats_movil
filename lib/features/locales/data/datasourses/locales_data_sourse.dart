@@ -27,10 +27,10 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
-      List<dynamic> body = jsonDecode(response.body);
+          List<dynamic> body = jsonDecode(response.body);
 
-      final locals =
-          body.map((dynamic item) => LocalModel.fromJson(item)).toList();
+          final locals =
+              body.map((dynamic item) => LocalModel.fromJson(item)).toList();
       // print("locales ${locals}");
       // return Future.value(locals); // Envuelve la lista en un Future
       return locals;
