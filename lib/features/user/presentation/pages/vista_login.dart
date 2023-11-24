@@ -11,7 +11,7 @@ import '../bloc/bloc_login/user_bloc.dart';
 import '../bloc/bloc_login/user_event.dart';
 import '../bloc/bloc_login/user_state.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'locales.dart';
+// import 'locales.dart';
 import 'register.dart';
 
 class LoginView extends StatefulWidget {
@@ -95,11 +95,11 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void navigateToHomeView() {
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(
-        builder: (BuildContext context) => LocalView(),
-      ),
-    );
+    // Navigator.of(context).pushReplacement(
+    //   MaterialPageRoute(
+    //     builder: (BuildContext context) => LocalView(),
+    //   ),
+    // );
   }
 
   void _enviarFormulario() {
@@ -201,7 +201,7 @@ class _LoginViewState extends State<LoginView> {
                               focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.blue),
                               ),
-                            ),  
+                            ),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Por favor ingresa un usuario';

@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'features/user/presentation/pages/locales.dart';
-// import 'features/users/presentation/pages/login.dart';
-// import 'features/users/presentation/pages/home_page.dart';
-
-
+import 'features/locales/presetation/locales.dart';
 
 class Splash extends StatefulWidget {
   const Splash({Key? key}) : super(key: key);
@@ -14,8 +10,7 @@ class Splash extends StatefulWidget {
   State<Splash> createState() => _SplashState();
 }
 
-class _SplashState extends State<Splash>
-    with SingleTickerProviderStateMixin {
+class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -47,7 +42,7 @@ class _SplashState extends State<Splash>
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LocalView()),
+        MaterialPageRoute(builder: (context) => const LocalView()),
       );
     });
   }
@@ -63,21 +58,20 @@ class _SplashState extends State<Splash>
             FadeTransition(
               opacity: _animation,
               child: Image.asset(
-                'assets/logo2.png', // Reemplaza 'your_image.png' con la ruta de tu imagen en assets
-                width: 150.0,
-                height: 150.0,
+                'assets/local_logo.jpg', // Reemplaza 'your_image.png' con la ruta de tu imagen en assets
+                width: 250.0,
+                height: 250.0,
               ),
             ),
             const SizedBox(height: 24.0),
             FadeTransition(
               opacity: _animation,
               child: const Text(
-                'LocalEats',
+                'LocalExplorer',
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 7.0,
-
                 ),
               ),
             ),
@@ -87,5 +81,3 @@ class _SplashState extends State<Splash>
     );
   }
 }
-
-

@@ -22,8 +22,8 @@ abstract class UserDataSource {
 
 
 class ApiUserDatasourceImp implements UserDataSource {
-  final String apiUrl = 'http://192.168.1.69:3000/api/login/login';
-  final String userUrl = 'http://192.168.1.69:3000/api/login/create';
+  final String apiUrl = 'http://192.168.1.117:3000/api/login/login';
+  final String userUrl = 'http://192.168.1.117:3000/api/login/create';
 
   final Dio dio = Dio();
   late SharedPreferences sharedPreferences;
@@ -82,8 +82,7 @@ class ApiUserDatasourceImp implements UserDataSource {
   @override
   Future<String> getAuthToken() async {
     await Future.delayed(const Duration(seconds: 1));
-    final SharedPreferences sharedPreferences =
-        await SharedPreferences.getInstance();
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     print("se ejecuto el token");
     final token = sharedPreferences.getString('auth_token') ?? '';
     // print("hay token? $token");

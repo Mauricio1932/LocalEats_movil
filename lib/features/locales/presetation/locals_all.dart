@@ -32,7 +32,7 @@ class _AllLocalsState extends State<AllLocals> {
                 return Container(
                   padding: EdgeInsets.all(30),
                   decoration: BoxDecoration(
-                    color: const Color(0x90E0E0E0),
+                    color: Color.fromARGB(255, 255, 255, 255),
                     borderRadius: BorderRadius.circular(
                         12.0), // Otras opciones de decoración según sea necesario
                   ),

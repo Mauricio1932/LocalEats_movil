@@ -5,9 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:localeats/features/locales/domain/entities/new_local_entities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/new_local_entities.dart';
+// import '../models/new_local_entities.dart';
 
 abstract class LocalApiDatasource {
+  Future<List<LocalModel>> getMyLocals();
   Future<List<LocalModel>> getLocals();
   Future<List<LocalModel>> getSingleLocals(int local);
   Future<LocalModel> createLocal(NewLocal product);
@@ -18,19 +19,20 @@ abstract class LocalApiDatasource {
 class ApiLocalDatasourceImp implements LocalApiDatasource {
   Dio dio = Dio();
 
-  final String apiUrl = 'http://192.168.1.69:3000/api/local/viewAll';
-  final String getSingleLocal =
-      'http://192.168.1.69:3000/api/local/viewLocalById/?id=';
-  final String create_local = "http://192.168.1.69:3000/api/local/createLocal";
+  final String apiUrl = 'http://192.168.1.117:3000/api/local/viewAll';
+  final String getSingleLocal = 'http://192.168.1.117:3000/api/local/viewLocalById/?id=';
+  final String createMylocal = "http://192.168.1.117:3000/api/local/createLocal";
+  final String getMyBussines =   "http://192.168.1.117:3000/api/local/viewUser?userId=";
+
   @override
   Future<List<LocalModel>> getLocals() async {
     final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
-          List<dynamic> body = jsonDecode(response.body);
+      List<dynamic> body = jsonDecode(response.body);
 
-          final locals =
-              body.map((dynamic item) => LocalModel.fromJson(item)).toList();
+      final locals =
+          body.map((dynamic item) => LocalModel.fromJson(item)).toList();
       // print("locales ${locals}");
       // return Future.value(locals); // Envuelve la lista en un Future
       return locals;
@@ -40,9 +42,26 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
   }
 
   @override
+  Future<List<LocalModel>> getMyLocals() async {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    final idUser = sharedPreferences.getString('id_user') ?? '';
+    final response = await http.get(Uri.parse("$getMyBussines$idUser"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> body = jsonDecode(response.body);
+
+      final locals =
+          body.map((dynamic item) => LocalModel.fromJson(item)).toList();
+      return locals;
+    } else {
+      throw Exception('Failed to load locals');
+    }
+  }
+
+  @override
   Future<List<LocalModel>> getSingleLocals(int local) async {
     // final response = await http.get(Uri.parse('$getSingleLocal/$local'));
-    print('url  $getSingleLocal$local');
     final response = await http.get(Uri.parse('$getSingleLocal$local'));
 
     // print("petcion ${local}");
@@ -82,7 +101,7 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
 
     try {
       Response response = await dio.post(
-        create_local,
+        createMylocal,
         options: Options(
           headers: {
             'auth-token': token,
@@ -90,9 +109,7 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
         ),
         data: formData,
       );
-      print("status: ${response.statusCode}");
       if (response.statusCode == 200) {
-        print('Respuesta del servidor: ${response.data}');
 
         // Reemplaza 'NewPost.fromJson' con la lógica real para convertir la respuesta a un objeto LocalModel
         LocalModel newLocal = LocalModel.fromJson(response.data);
@@ -105,17 +122,4 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
       throw Exception('Failed to  $e');
     }
   }
-
-  // @override
-  // Future<void> putUpdateProduct(Product product) async {
-  //   await Future.delayed(const Duration(seconds: 2));
-  //   final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-  //   String productsString = sharedPreferences.getString('product') ?? "[]";
-  //   List<ProductModel> productModel = jsonDecode(productsString).map<ProductModel>((data) => ProductModel.fromJson(data)).toList();
-
-  //   productModel.removeWhere((item) => item.id == product.id);
-  //   productModel.add(UserModel.fromEntity(product as User) as ProductModel);
-  //   sharedPreferences.setString('product', jsonEncode(product));
-  // }
 }

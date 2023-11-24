@@ -10,7 +10,7 @@ abstract class LocationApiDatasource {
 
 class ApiMapsDatasourceImp implements LocationApiDatasource {
   final String getSingleLocal =
-      'http://192.168.1.69:3000/api/local/view_ubi_local?id=';
+      'http://192.168.1.117:3000/api/local/view_ubi_local?id=';
 
   @override
   Future<List<MapsModel>> getUbicacion(data) async {

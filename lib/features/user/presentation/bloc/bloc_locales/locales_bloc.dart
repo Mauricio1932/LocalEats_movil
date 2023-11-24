@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localeats/features/locales/domain/usecase/get_mylocals_usecase.dart';
 // import 'package:localeats/features/locales/domain/usecase/get_single_local.dart';
 
 // import '../../../locales/domain/usecase/get_local_usecases.dart';
@@ -8,9 +9,12 @@ import 'locales_state.dart';
 
 class LocalesBloc extends Bloc<LocalesEvent, LocalesState> {
   final GetLocalUsecase getLocalUsecase;
+  final GetMyLocalUsecase getMyLocalUsecase;
+  LocalesBloc(this.getLocalUsecase, this.getMyLocalUsecase)
+      : super(const LocalesState()) {
+    on<LocalGetRequest>(_handleLocalesRecuested);
+    on<GetMyLocals>(_handleGetMylocals);
 
-  LocalesBloc(this.getLocalUsecase) : super(const LocalesState()) {
-    on<LocalRequest>(_handleLocalesRecuested);
     // on<LocalSingleView>(_handleViewLocal);
     // on<DeleteLocalSingleView>(_handleCloseViewLocal);
     // on<LocalSingleRequest>(_handleSingleLocalesRecuested);
@@ -26,6 +30,30 @@ class LocalesBloc extends Bloc<LocalesEvent, LocalesState> {
       ));
 
       final response = await getLocalUsecase.execute();
+
+      emit(
+        state.copyWith(
+          localesStatus: LocalesRequest.requestSuccess,
+          locales: response,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(
+        localesStatus: LocalesRequest.requestFailure,
+      ));
+    }
+  }
+
+  Future<void> _handleGetMylocals(
+    event,
+    Emitter<LocalesState> emit,
+  ) async {
+    try {
+      emit(state.copyWith(
+        localesStatus: LocalesRequest.requestInProgress,
+      ));
+
+      final response = await getMyLocalUsecase.execute();
 
       emit(
         state.copyWith(

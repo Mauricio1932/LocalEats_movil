@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localeats/features/locales/domain/entities/local.dart';
 import 'package:localeats/features/locales/domain/entities/new_local_entities.dart';
 import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_bloc.dart';
 import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_event.dart';
@@ -17,14 +18,18 @@ import 'package:path/path.dart' as path;
 import 'package:quickalert/quickalert.dart';
 // import 'package:quickalert/widgets/quickalert_dialog.dart';
 
-class CreateLocal extends StatefulWidget {
-  const CreateLocal({super.key});
+class EditLocal extends StatefulWidget {
+  final List<Local> local;
+  final int id;
+
+  const EditLocal({Key? key, required this.local, required this.id})
+      : super(key: key);
 
   @override
-  State<CreateLocal> createState() => _CreateLocalState();
+  State<EditLocal> createState() => _EditLocalState();
 }
 
-class _CreateLocalState extends State<CreateLocal> {
+class _EditLocalState extends State<EditLocal> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _genero = TextEditingController();
@@ -36,8 +41,21 @@ class _CreateLocalState extends State<CreateLocal> {
   File? selectedFile;
   File? selectPdf;
 
+  bool flag = false;
+
+  void toggleBussines() {
+    setState(() {
+      flag = !flag; // Cambia el valor de la bandera
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _nameLocalFieldController.text = widget.local[widget.id].namelocal;
+    _genero.text = widget.local[widget.id].genero;
+    _descripcion.text = widget.local[widget.id].descripcion;
+    _ubicacion.text = widget.local[widget.id].ubicacion;
+
     return Scaffold(
       appBar: AppBar(
         // leading: null,
@@ -49,13 +67,7 @@ class _CreateLocalState extends State<CreateLocal> {
           icon: const Icon(Icons.arrow_back_ios),
           color: Colors.black,
           onPressed: () {
-            // Lógica para manejar el botón de retroceso aquí
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const Profile(),
-              ),
-            );
+            Navigator.pop(context);
           },
         ),
 
@@ -81,10 +93,10 @@ class _CreateLocalState extends State<CreateLocal> {
         listener: (context, state) {
           // Escuchamos el estado del Bloc y mostramos un mensaje cuando el contador llega a 3.
 
-          if (state.newLocalStatus == LocalRequest.requestSuccess) {}
+          if (state.newLocalStatus == LocalRequest.requestSuccess) {
+            const Center(child: CircularProgressIndicator());
+          }
 
-          // print('Estado actual: ${state.newLocalStatus}');
-          // const Center(child: CircularProgressIndicator());
           if (state.newLocalStatus == LocalRequest.requestInProgress) {
             const Center(child: CircularProgressIndicator());
           }
@@ -111,7 +123,7 @@ class _CreateLocalState extends State<CreateLocal> {
               Future.delayed(const Duration(seconds: 2), () {
                 // Remover el loading después del retraso
                 Navigator.pop(context);
-                _resetLocalStatus(); // Cambiar el estado a success después de quitar el loading
+                // _resetLocalStatus(); // Cambiar el estado a success después de quitar el loading
               });
               // _resetLocalStatus();
             }
@@ -149,23 +161,25 @@ class _CreateLocalState extends State<CreateLocal> {
                   Center(
                     child: Column(
                       children: [
+                        if (widget.local[0].imagen != "")
+                          Image.network(
+                            'http://192.168.1.117:3000/api/local/view_img?img1=${widget.local[widget.id].imagen}', // Reemplaza con la URL de tu imagen
+                            width: 350,
+                            height: 300,
+                          ),
                         if (selectedFile != null)
                           Image.file(
                             selectedFile!,
                             width: 350,
                             height: 300,
                           ),
-                        if (selectedFile == null)
-                          // Image.file(
-                          //   selectedFile!,
-                          //   width: 350,
-                          //   height: 300,
-                          // ),
-                        Image.asset(
-                          'assets/notimage.jpg', // Reemplaza con la ruta correcta de tu imagen local
-                          width: 300,
-                          height: 240,
-                        )
+                        if (selectedFile == null &&
+                            widget.local[0].imagen == "")
+                          Image.asset(
+                            'assets/notimage.jpg', // Reemplaza con la ruta correcta de tu imagen local
+                            width: 300,
+                            height: 240,
+                          )
                       ],
                     ),
                   ),
@@ -192,6 +206,7 @@ class _CreateLocalState extends State<CreateLocal> {
                                             .black), // Borde cuando está enfocado
                                   ),
                                 ),
+// initialValue:
 
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -317,28 +332,73 @@ class _CreateLocalState extends State<CreateLocal> {
                           ],
                         ),
                       ),
-                      Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 5),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              postLocal();
-                            },
-                            style: ElevatedButton.styleFrom(
-                              // ignore: deprecated_member_use
-                              primary: Colors.black, // color de fondo
-                              // onPrimary: Colors.white, // color del texto
-                              side: const BorderSide(
-                                color: Colors.grey, // color del borde
-                                width: 1.0, // ancho del borde
-                              ),
-                              minimumSize: const Size(999, 40),
-                              textStyle: const TextStyle(
-                                  fontSize: 16,
-                                  color: Color.fromARGB(255, 187, 77, 77)),
+                      const SizedBox(height: 5),
+                      Container(
+                          padding: const EdgeInsets.only(right: 30.0, left: 30),
+                          child: flag
+                              ? ElevatedButton(
+                                  onPressed: () {
+                                    toggleBussines();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    // ignore: deprecated_member_use
+                                    primary: Colors.blue, // color de fondo
+                                    // onPrimary: Colors.white, // color del texto
+                                    side: const BorderSide(
+                                      color: Colors.grey, // color del borde
+                                      width: 1.0, // ancho del borde
+                                    ),
+                                    minimumSize: const Size(999, 40),
+                                    textStyle: const TextStyle(
+                                        fontSize: 16,
+                                        color:
+                                            Color.fromARGB(255, 187, 77, 77)),
+                                  ),
+                                  child: const Text('Activar Negocio'),
+                                )
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    // postLocal();
+                                    toggleBussines();
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    // ignore: deprecated_member_use
+                                    primary: Colors.red, // color de fondo
+                                    // onPrimary: Colors.white, // color del texto
+                                    side: const BorderSide(
+                                      color: Colors.grey, // color del borde
+                                      width: 1.0, // ancho del borde
+                                    ),
+                                    minimumSize: const Size(999, 40),
+                                    textStyle: const TextStyle(
+                                        fontSize: 16,
+                                        color:
+                                            Color.fromARGB(255, 187, 77, 77)),
+                                  ),
+                                  child: const Text('Desactivar Negocio'),
+                                )),
+                      Container(
+                        padding: const EdgeInsets.only(left: 30, right: 30),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            postLocal();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            // ignore: deprecated_member_use
+                            primary: Colors.black, // color de fondo
+                            // onPrimary: Colors.white, // color del texto
+                            side: const BorderSide(
+                              color: Colors.grey, // color del borde
+                              width: 1.0, // ancho del borde
                             ),
-                            child: const Text('Publicar'),
-                          ))
+                            minimumSize: const Size(999, 40),
+                            textStyle: const TextStyle(
+                                fontSize: 16,
+                                color: Color.fromARGB(255, 187, 77, 77)),
+                          ),
+                          child: const Text('Actualizar Negocio'),
+                        ),
+                      ),
                     ],
                   ),
                 ],

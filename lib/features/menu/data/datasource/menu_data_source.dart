@@ -12,7 +12,7 @@ abstract class LocationApiDatasource {
 
 class ApiMenuDatasourceImpl implements LocationApiDatasource {
   final String getSingleLocal =
-      'http://192.168.1.69:3000/api/menu/viewAllMenu?localId=';
+      'http://10.11.1.158:3000/api/menu/viewAllMenu?localId=';
 
   @override
   Future<List<MenuModel>> getMenu(data) async {

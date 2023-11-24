@@ -25,6 +25,11 @@ class LocalRepositoryImpl implements LocalRepository {
   }
 
   @override
+  Future<List<Local>> getMyLocals() async {
+    return await apiLocalDatasourceImp.getMyLocals();
+  }
+
+  @override
   Future<Local> createLocal(NewLocal local) async {
     return await apiLocalDatasourceImp.createLocal(local);
   }

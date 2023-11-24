@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localeats/features/user/presentation/pages/create_local.dart';
-// import 'package:localeats/features/user/presentation/pages/login.dart';
 import 'package:localeats/features/user/presentation/pages/vista_login.dart';
 
-// import 'home_page.dart';
+import '../../../locales/presetation/create_local.dart';
+import '../../../locales/presetation/mi_bussinies.dart';
 import '../bloc/bloc_login/user_bloc.dart';
 import '../bloc/bloc_login/user_event.dart';
 import '../bloc/bloc_login/user_state.dart';
-import 'locales.dart';
-
-// import 'login.dart';
-
-// import 'registerLocal.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -45,7 +39,7 @@ class _ProfileState extends State<Profile> {
         return Scaffold(
           appBar: AppBar(
             leading: IconButton(
-              icon: Icon(Icons.arrow_back_ios),
+              icon: const Icon(Icons.arrow_back_ios),
               color: Colors.black,
               onPressed: () {
                 // Lógica para manejar el botón de retroceso aquí
@@ -58,17 +52,6 @@ class _ProfileState extends State<Profile> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // IconButton(
-                //   icon: const Icon(Icons.arrow_back_ios),
-                //   color: Colors.black,
-                //   onPressed: () {
-                //     Navigator.of(context).pushReplacement(
-                //       MaterialPageRoute(
-                //         builder: (BuildContext context) => const LocalView(),
-                //       ),
-                //     );
-                //   },
-                // ),
                 const Padding(
                   padding: EdgeInsets.only(left: 60, right: 60),
                   child: Text(
@@ -87,94 +70,76 @@ class _ProfileState extends State<Profile> {
                     context.read<UserBloc>().add(RemoveAuthToken());
                     context.read<UserBloc>().add(GetAuthToken());
                     Navigator.pop(context);
-                    // Navigator.of(context).pushReplacement(
-                    //   MaterialPageRoute(
-                    //     builder: (BuildContext context) => const LocalView(),
-                    //   ),
-                    // );
                   },
                 ),
               ],
             ),
           ),
-          body: Column(
-            children: [
-              const SizedBox(height: 45),
-              Column(
+          body: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              if (state.userStatus == UserRequest.requestInProgress) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state.userStatus == UserRequest.requestFailure) {
+                return const LoginView();
+              }
+              if (state.userStatus == UserRequest.unknown) {
+                context.read<UserBloc>().add(GetAuthToken());
+              }
+              return Column(
                 children: [
-                  Container(
-                    width: 200,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                      border: Border.all(
-                        color: const Color.fromARGB(255, 152, 151, 151),
-                        width: 2,
-                      ),
-                    ),
-                    child: Center(
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/download5.jpg',
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
+                  const SizedBox(height: 45),
+                  Column(
+                    children: [
+                      Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          border: Border.all(
+                            color: const Color.fromARGB(255, 152, 151, 151),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: ClipOval(
+                            child: Image.asset(
+                              'assets/download5.jpg',
+                              width: 200,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: ListView(
-                  children: [
-                    ListTile(
-                      title: const Text(
+                  const SizedBox(height: 20),
+                  const Column(
+                    children: [
+                      Text(
                         'Home',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      onTap: () {
-                        Navigator.pushReplacementNamed(context, '/home');
-                      },
-                    ),
-                    ListTile(
-                      title: const Text(
-                        'Mi LocalEats',
+                      SizedBox(height: 20),
+                      Text(
+                        'Mis Establecimientos',
                         textAlign: TextAlign.center,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        Navigator.pushReplacementNamed(context, '');
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.bold),
+                      )
+                    ],
+                  ),
+                  const MiBussines(),
+                ],
+              );
+            },
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              // showDialog(
-              //   context: context,
-              //   builder: (BuildContext context) {
-              //     return AlertDialog(
-              //       title: const Text('Alerta, muy pronto'),
-              //       content: const Text("Estamos trabajando en eso"),
-              //       actions: [
-              //         TextButton(
-              //           onPressed: () {
-              //             Navigator.pop(context); // Cierra la alerta
-              //           },
-              //           child: const Text('OK'),
-              //         ),
-              //       ],
-              //     );
-              //   },
-              // );
-
               Navigator.pushReplacement(
                 context,
                 PageRouteBuilder(

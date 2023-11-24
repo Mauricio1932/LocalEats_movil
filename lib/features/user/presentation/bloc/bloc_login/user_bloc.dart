@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:localeats/features/user/domain/usecase/getTokenUsecase.dart';
 
+import '../../../../locales/domain/usecase/get_mylocals_usecase.dart';
 import '../../../domain/usecase/delete_token_usecase.dart';
 import '../../../domain/usecase/login_usecase.dart';
 import 'user_event.dart';
@@ -52,9 +53,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         userStatus: UserRequest.requestInProgress,
       ));
 
-      
-      var token = await getAuthTokenUseCase.execute(); // Esto es un Future<String>
-      
+      var token =
+          await getAuthTokenUseCase.execute(); // Esto es un Future<String>
 
       if (token == '') {
         emit(state.copyWith(

@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => MenuBloc(menuCaseUserConfig.getMenuUsecase!)
         ),
         BlocProvider(
-          create: (BuildContext context) => LocalesBloc(usecaseConfig.getLocalUsecase!)
+          create: (BuildContext context) => LocalesBloc(usecaseConfig.getLocalUsecase!,usecaseConfig.getMyLocalUsecase!)
         ),
 
         BlocProvider(
