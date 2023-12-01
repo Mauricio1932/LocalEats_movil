@@ -95,6 +95,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void navigateToHomeView() {
+    Navigator.pop(context);
     // Navigator.of(context).pushReplacement(
     //   MaterialPageRoute(
     //     builder: (BuildContext context) => LocalView(),
@@ -123,7 +124,7 @@ class _LoginViewState extends State<LoginView> {
     ];
 
     context.read<UserBloc>().add(LoginUserRequest(userData[0]));
-    // context.read<UserBloc>().add(GetAuthToken());
+    context.read<UserBloc>().add(GetAuthToken());
     load_profile();
   }
 
@@ -137,7 +138,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   void register_profile() {
-    context.read<UserBloc>().add(GetAuthToken());
+    // context.read<UserBloc>().add(GetAuthToken());
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
         builder: (BuildContext context) => const RegisterView(),
@@ -148,174 +149,169 @@ class _LoginViewState extends State<LoginView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BlocBuilder<UserBloc, UserState>(builder: (context, state) {
-      return SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
-                  onPressed: () {
-                    navigateToHomeView();
-                  },
-                ),
+        body: SingleChildScrollView(
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+                onPressed: () {
+                  navigateToHomeView();
+                },
               ),
-              Container(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/logo2.png',
+            ),
+            Container(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/local_logo.jpg',
+                    width: 250.0,
+                    height: 250.0,
+                  ),
+                  const SizedBox(height: 20.0),
+                  const Text(
+                    'LocalExplorer',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: 7.0,
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        TextFormField(
+                          controller: _correoController,
+                          decoration: const InputDecoration(
+                            labelText: 'Usuario',
+                            prefixIcon: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(Icons.person),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.blue),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor ingresa un usuario';
+                            }
+                            return null;
+                          },
+                          onSaved: (value) {
+                            _username =
+                                value; // Guardar el valor de entrada en _username
+                          },
+                        ),
+                        const SizedBox(height: 10.0),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              TextFormField(
+                                controller: _passwordController,
+                                obscureText: true,
+                                decoration: const InputDecoration(
+                                  labelText: 'Contraseña',
+                                  prefixIcon: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(Icons.lock),
+                                  ),
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.blue),
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Por favor ingresa una contraseña';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _password =
+                                      value; // Guardar el valor de entrada en _password
+                                },
+                              ),
+                              const SizedBox(height: 10.0),
+                              GestureDetector(
+                                onTap: () {
+                                  // Acción al presionar el texto "Forgot Password?"
+                                },
+                                child: const Text(
+                                  'Forgot Password?',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 93, 93, 93),
+                                    fontSize: 13.0,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      // loginUser();
+                      _enviarFormulario();
+                      // print("estoy en login${state.userStatus}");
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color.fromARGB(255, 93, 93, 93),
+                      ),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                      ),
+                    ),
+                    child: Container(
                       width: 200.0,
-                      height: 200.0,
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: const Center(
+                        child: Text(
+                          'Iniciar sesión',
+                          style: TextStyle(fontSize: 16.0),
+                        ),
+                      ),
                     ),
-                    const SizedBox(height: 20.0),
-                    const Text(
-                      'LocalEats',
+                  ),
+                  const SizedBox(height: 10.0),
+                  GestureDetector(
+                    onTap: () {
+                      register_profile();
+                    },
+                    child: const Text(
+                      'Registrarme',
                       style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 7.0,
+                        color: Color.fromARGB(255, 93, 93, 93),
+                        fontSize: 14.0,
                       ),
                     ),
-                    const SizedBox(height: 20.0),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: _correoController,
-                            decoration: const InputDecoration(
-                              labelText: 'Usuario',
-                              prefixIcon: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(Icons.person),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.grey),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Por favor ingresa un usuario';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _username =
-                                  value; // Guardar el valor de entrada en _username
-                            },
-                          ),
-                          const SizedBox(height: 10.0),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextFormField(
-                                  controller: _passwordController,
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Contraseña',
-                                    prefixIcon: Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(Icons.lock),
-                                    ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.grey),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.blue),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return 'Por favor ingresa una contraseña';
-                                    }
-                                    return null;
-                                  },
-                                  onSaved: (value) {
-                                    _password =
-                                        value; // Guardar el valor de entrada en _password
-                                  },
-                                ),
-                                const SizedBox(height: 10.0),
-                                GestureDetector(
-                                  onTap: () {
-                                    // Acción al presionar el texto "Forgot Password?"
-                                  },
-                                  child: const Text(
-                                    'Forgot Password?',
-                                    style: TextStyle(
-                                      color: Color.fromARGB(255, 93, 93, 93),
-                                      fontSize: 13.0,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20.0),
-                    ElevatedButton(
-                      onPressed: () {
-                        // loginUser();
-                        _enviarFormulario();
-                        // print("estoy en login${state.userStatus}");
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color.fromARGB(255, 93, 93, 93),
-                        ),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                        ),
-                      ),
-                      child: Container(
-                        width: 200.0,
-                        padding: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: const Center(
-                          child: Text(
-                            'Iniciar sesión',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10.0),
-                    GestureDetector(
-                      onTap: () {
-                        register_profile();
-                      },
-                      child: const Text(
-                        'Registrarme',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 93, 93, 93),
-                          fontSize: 14.0,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
-    }));
+      ),
+    ));
   }
 }

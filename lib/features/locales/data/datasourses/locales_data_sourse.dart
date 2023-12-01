@@ -19,10 +19,13 @@ abstract class LocalApiDatasource {
 class ApiLocalDatasourceImp implements LocalApiDatasource {
   Dio dio = Dio();
 
-  final String apiUrl = 'http://192.168.1.117:3000/api/local/viewAll';
-  final String getSingleLocal = 'http://192.168.1.117:3000/api/local/viewLocalById/?id=';
-  final String createMylocal = "http://192.168.1.117:3000/api/local/createLocal";
-  final String getMyBussines =   "http://192.168.1.117:3000/api/local/viewUser?userId=";
+  final String apiUrl = 'http://192.168.43.57:3000/api/local/viewAll';
+  final String getSingleLocal =
+      'http://192.168.43.57:3000/api/local/viewLocalById/?id=';
+  final String createMylocal =
+      "http://192.168.43.57:3000/api/local/createLocal";
+  final String getMyBussines =
+      "http://192.168.43.57:3000/api/local/viewUser?userId=";
 
   @override
   Future<List<LocalModel>> getLocals() async {
@@ -46,8 +49,11 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     final idUser = sharedPreferences.getString('id_user') ?? '';
+
     final response = await http.get(Uri.parse("$getMyBussines$idUser"));
 
+    print("mi id: $idUser");
+    print("mi status: ${response.body}");
     if (response.statusCode == 200) {
       List<dynamic> body = jsonDecode(response.body);
 
@@ -97,7 +103,7 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
         'userId': idUser,
       },
     );
-    print("response ${formData.fields}");
+    // print("response ${formData.fields}");
 
     try {
       Response response = await dio.post(
@@ -110,6 +116,7 @@ class ApiLocalDatasourceImp implements LocalApiDatasource {
         data: formData,
       );
       if (response.statusCode == 200) {
+        print("object dta${response.data}");
 
         // Reemplaza 'NewPost.fromJson' con la lógica real para convertir la respuesta a un objeto LocalModel
         LocalModel newLocal = LocalModel.fromJson(response.data);

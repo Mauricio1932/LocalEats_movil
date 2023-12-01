@@ -2,6 +2,7 @@ import '../../domain/entities/login.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repository/login_repository.dart';
 import '../datasource/user_data_source.dart';
+import '../models/create_user_model.dart';
 
 class UserRepositoryImpl implements LoginUserRepository {
   final ApiUserDatasourceImp apiUserDatasourceImp;
@@ -24,7 +25,7 @@ class UserRepositoryImpl implements LoginUserRepository {
   }
 
   @override
-  Future<List<UserCreate>>userCreate(UserCreate user) {
+  Future<CreateUserLoginModel> userCreate(UserCreate user) {
     return apiUserDatasourceImp.userCreate(user);
   }
 }

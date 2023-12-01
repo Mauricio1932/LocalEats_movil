@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 // import 'package:infinite_carousel/infinite_carousel.dart';
 
@@ -17,6 +19,7 @@ import '../../user/presentation/bloc/bloc_login/user_bloc.dart';
 import '../../user/presentation/bloc/bloc_login/user_event.dart';
 import '../../user/presentation/bloc/bloc_single_local/single_local_bloc.dart';
 import '../../user/presentation/bloc/bloc_single_local/single_local_event.dart';
+
 import 'local_single.dart';
 
 // import '../bloc/locales_state.dart';
@@ -30,10 +33,39 @@ class LocalView extends StatefulWidget {
 }
 
 class __LocalViewState extends State<LocalView> {
+  late Position _currentPosition;
+  late String _currentAddress;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  void _getCurrentLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+
+      Placemark placemark = placemarks[0];
+
+      setState(() {
+        _currentPosition = position;
+        _currentAddress =
+            "${placemark.name}, ${placemark.locality}, ${placemark.country}";
+      });
+    } catch (e) {
+      print('Error al obtener la ubicación: $e');
+    }
+  }
+
   void viewLocal(int localId) {
     // context.read<LocalesBloc>().add(LocalSingleView(localId));
     // print('ese es el id: $localId');
     context.read<LocalesSingleBloc>().add(LocalSingleView(localId));
+
     localpage(localId);
   }
 
@@ -77,7 +109,8 @@ class __LocalViewState extends State<LocalView> {
                 ),
               ),
               child: const CircleAvatar(
-                backgroundImage: AssetImage('assets/download5.jpg'),
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage('assets/local_logo.jpg'),
                 radius: 16,
               ),
             ),
@@ -93,7 +126,7 @@ class __LocalViewState extends State<LocalView> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
                     child: const Text(
-                      'LocalEats',
+                      'LocalExplorer',
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.normal,
@@ -111,14 +144,7 @@ class __LocalViewState extends State<LocalView> {
                         size: 20,
                       ),
                       SizedBox(width: 3),
-                      Text(
-                        "LocalEats",
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
-                        ),
-                      ),
+                      
                     ],
                   ),
                 ],
@@ -196,7 +222,7 @@ class __LocalViewState extends State<LocalView> {
                           // enlargeStrategy: C|enterPageEnlargeStrategy.height,
                         ),
                         // itemCount: state.locales.length,
-                        itemCount: min(5, state.locales.length),
+                        itemCount: min(6, state.locales.length),
                         itemBuilder:
                             (BuildContext context, int index, int realIndex) {
                           final local = state.locales[index];
@@ -224,7 +250,7 @@ class __LocalViewState extends State<LocalView> {
                                         borderRadius: BorderRadius.circular(12),
                                         image: DecorationImage(
                                           image: NetworkImage(
-                                            'http://192.168.1.117:3000/api/local/view_img?img1=${local.imagen}',
+                                            'http://192.168.43.57:3000/api/local/view_img?img1=${local.imagen}',
                                           ),
                                           fit: BoxFit.cover,
                                         ),
@@ -330,62 +356,70 @@ class __LocalViewState extends State<LocalView> {
                                     color: Color.fromARGB(255, 255, 255, 255),
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        width: double.infinity,
-                                        height: 140,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          image: DecorationImage(
-                                            image: NetworkImage(
-                                              'http://192.168.1.117:3000/api/local/view_img?img1=${local.imagen}',
+                                  child: InkWell(
+                                    onTap: () {
+                                      viewLocal(local.id);
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Container(
+                                          width: double.infinity,
+                                          height: 140,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            image: DecorationImage(
+                                              image: NetworkImage(
+                                                'http://192.168.43.57:3000/api/local/view_img?img1=${local.imagen}',
+                                              ),
+                                              fit: BoxFit.cover,
                                             ),
-                                            fit: BoxFit.cover,
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Container(
-                                        padding: const EdgeInsets.only(left: 5),
-                                        child: Column(
-                                          children: [
-                                            Container(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                local.namelocal,
-                                                style: const TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
+                                        const SizedBox(height: 5),
+                                        Container(
+                                          padding:
+                                              const EdgeInsets.only(left: 5),
+                                          child: Column(
+                                            children: [
+                                              Container(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  local.namelocal,
+                                                  style: const TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black,
+                                                  ),
+                                                  maxLines: 2,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerLeft,
-                                              padding:
-                                                  const EdgeInsets.all(0.0),
-                                              child: Text(
-                                                local.genero,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13,
-                                                  color: Color(0xFF4B4A4A),
+                                              Container(
+                                                alignment: Alignment.centerLeft,
+                                                padding:
+                                                    const EdgeInsets.all(0.0),
+                                                child: Text(
+                                                  local.genero,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 13,
+                                                    color: Color(0xFF4B4A4A),
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
                                               ),
-                                            ),
-                                            const SizedBox(
-                                              height: 2,
-                                            ),
-                                          ],
+                                              const SizedBox(
+                                                height: 2,
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
@@ -415,16 +449,16 @@ class __LocalViewState extends State<LocalView> {
       unselectedItemColor: const Color.fromARGB(255, 0, 0, 0),
       selectedIconTheme:
           const IconThemeData(color: Color.fromARGB(255, 80, 80, 80)),
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
+      items: <BottomNavigationBarItem>[
+        const BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: 'Search',
+          icon: Image.asset('assets/local_logo.jpg', width: 50, height: 50),
+          label: 'LocalExplorer',
         ),
-        BottomNavigationBarItem(
+        const BottomNavigationBarItem(
           icon: Icon(Iconsax.user),
           label: 'Profile',
         ),
@@ -456,6 +490,8 @@ class __LocalViewState extends State<LocalView> {
 
   void login() {
     context.read<UserBloc>().add(GetAuthToken());
+    // context.read<MyBussinesBloc>().add(GetBussinesRequest());
+
     // Profile();
     Navigator.push(
       context,
@@ -489,6 +525,7 @@ class __LocalViewState extends State<LocalView> {
     Navigator.pop(context);
 
     // print('Datos recargados');
+
     context.read<LocalesBloc>().add(LocalGetRequest());
   }
 }

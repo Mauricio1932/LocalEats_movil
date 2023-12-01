@@ -163,7 +163,7 @@ class _EditLocalState extends State<EditLocal> {
                       children: [
                         if (widget.local[0].imagen != "")
                           Image.network(
-                            'http://192.168.1.117:3000/api/local/view_img?img1=${widget.local[widget.id].imagen}', // Reemplaza con la URL de tu imagen
+                            'http://192.168.43.57:3000/api/local/view_img?img1=${widget.local[widget.id].imagen}', // Reemplaza con la URL de tu imagen
                             width: 350,
                             height: 300,
                           ),

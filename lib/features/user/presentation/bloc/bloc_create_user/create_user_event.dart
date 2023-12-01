@@ -9,4 +9,7 @@ class CreateUserRequest extends CreateUserEvent {
   const CreateUserRequest(this.user);
   final UserCreate user;
 }
+class ResetState extends CreateUserEvent {
+
+}
 

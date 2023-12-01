@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localeats/features/locales/domain/entities/new_local_entities.dart';
+import 'package:localeats/features/menu/domain/entities/new_menu_entities.dart';
+import 'package:localeats/features/menu/presentation/bloc/bloc_new_menu/new_menu_bloc.dart';
 import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_bloc.dart';
 import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_event.dart';
 import 'package:localeats/features/user/presentation/bloc/bloc_create_local/create_local_state.dart';
@@ -15,6 +17,9 @@ import 'package:path/path.dart' as path;
 // import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:quickalert/quickalert.dart';
+
+import '../../menu/data/datasource/menu_data_source.dart';
+import '../../menu/presentation/bloc/bloc_new_menu/new_menu_event.dart';
 // import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 class CreateLocal extends StatefulWidget {
@@ -35,7 +40,7 @@ class _CreateLocalState extends State<CreateLocal> {
 
   File? selectedFile;
   File? selectPdf;
-
+  int idLocal = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,6 +128,8 @@ class _CreateLocalState extends State<CreateLocal> {
                     type: QuickAlertType.success,
                     text: 'Transaction Completed Successfully!',
                   );
+                  idLocal = state.newLocals[0].id;
+                  menuCreate();
                   _resetLocalStatus();
                 });
               });
@@ -409,29 +416,62 @@ class _CreateLocalState extends State<CreateLocal> {
   }
 
   void postLocal() {
-    if (_formKey.currentState!.validate()) {
-      // Realizar la acción deseada
+    if (selectPdf == null || selectedFile == null) {
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Oops...',
+        text: 'No has cargado ni "imagen" ni "pdf"; ambos son requeridos.',
+      );
+    } else {
+      if (_formKey.currentState!.validate()) {
+        // Realizar la acción deseada
 
-      List<NewLocal> data = [
-        NewLocal(
-          id: 0,
-          namelocal: _nameLocalFieldController.text,
-          genero: _genero.text,
-          descripcion: _descripcion.text,
-          ubicacion: _ubicacion.text,
-          menu: '',
-          imagen2: selectedFile!,
-          imagen: '',
-        ),
-      ];
+        List<NewLocal> data = [
+          NewLocal(
+            id: 0,
+            namelocal: _nameLocalFieldController.text,
+            genero: _genero.text,
+            descripcion: _descripcion.text,
+            ubicacion: _ubicacion.text,
+            menu: '',
+            imagen2: selectedFile!,
+            imagen: '',
+          ),
+        ];
 
-      // context.read<CreateLocalBloc>().add(CreateLocalRequest(data[0]));
-      final createLocalBloc = context.read<CreateLocalBloc>();
+        // context.read<CreateLocalBloc>().add(CreateLocalRequest(data[0]));
+        final createLocalBloc = context.read<CreateLocalBloc>();
 
-      // Agrega el evento para realizar la operación en el Bloc
-      createLocalBloc.add(CreateLocalRequest(data[0]));
+        // Agrega el evento para realizar la operación en el Bloc
+        createLocalBloc.add(CreateLocalRequest(data[0]));
+      }
     }
-    // _resetLocalStatus();
+  }
+
+  Future<String> menuCreate() async {
+    final ApiMenuDatasourceImpl apiMenuDatasourceImpl = ApiMenuDatasourceImpl();
+    List<NewMenu> data = [
+      NewMenu(
+        pdf: selectPdf!,
+        id: idLocal,
+      ),
+    ];
+    try {
+      // Llama a menuCreate y obtén el resultado
+      final String result =
+          (await apiMenuDatasourceImpl.menuCreate(data[0])) as String;
+
+      // Hacer algo con el resultado si es necesario
+      print(result);
+
+      // Devuelve el resultado, o lo que necesites devolver
+      return result;
+    } catch (e) {
+      // Manejar cualquier excepción que pueda ocurrir
+      print('Error en menuCreate: $e');
+      return 'Error al crear el menú';
+    }
   }
 
   void _resetLocalStatus() {

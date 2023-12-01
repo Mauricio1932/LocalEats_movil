@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localeats/features/locales/presetation/comentarios.dart';
 import 'package:localeats/features/maps/presentation/pages/maps.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -83,7 +84,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Image.network(
-                        'http://192.168.1.117:3000/api/local/view_img?img1=${local.imagen}', // Reemplaza con la URL de la imagen que desees cargar
+                        'http://192.168.43.57:3000/api/local/view_img?img1=${local.imagen}', // Reemplaza con la URL de la imagen que desees cargar
                         height: 250.0, // Altura de la imagen en píxeles
                         fit: BoxFit
                             .cover, // Ajusta la imagen para que llene el contenedor
@@ -217,103 +218,12 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                       ),
                     ),
                   ),
-                  Expanded(
-                      child: Container(
-                    // padding: EdgeInsets.all(100),
-                    width: deviceWidth * 0.9,
-                    height: deviceWidth * 0.45,
-                    color: const Color.fromARGB(255, 247, 247, 247),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 9.0),
-                            child: ListView.builder(
-                              scrollDirection: Axis.vertical,
-                              // itemCount: state.comentario.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                // final comentario = state.comentario[index];
-                                return const Column(
-                                  crossAxisAlignment: CrossAxisAlignment
-                                      .start, // Alinea el texto a la izquierda
-                                  children: <Widget>[
-                                    Row(
-                                      children: [
-                                        Text(
-                                          'comentario: ',
-                                          style: TextStyle(
-                                            color: Color.fromARGB(255, 0, 0, 0),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                        Text(
-                                          "comentario.comment",
-                                          style: TextStyle(
-                                            color: Color.fromARGB(255, 0, 0, 0),
-                                            fontSize: 16,
-                                            // fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // Otros elementos si es necesario
-                                  ],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        Form(
-                          key: _formKey,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: TextFormField(
-                                    style: const TextStyle(
-                                        color: Color.fromARGB(255, 0, 0, 0)),
-                                    controller: _comentarioFieldController,
-                                    decoration: const InputDecoration(
-                                      labelStyle: TextStyle(
-                                          color: Color.fromARGB(255, 0, 0, 0)),
-                                      hintText: 'Añade un Comentario',
-                                      hintStyle: TextStyle(
-                                          color: Color.fromARGB(255, 0, 0, 0)),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Colors
-                                                .black), // Color de la línea de abajo cuando está enfocado
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return 'El comentario no debe estar vacio';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.send),
-                                  color: const Color.fromARGB(255, 0, 0, 0),
-                                  onPressed: () {
-                                    sendComent(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
-
-                  // const SizedBox(height: 180),
+                  
+                  ViewCometarios(local.id),
+                  // const SizedBox(height:),
                   Padding(
                     padding:
-                        const EdgeInsets.symmetric(vertical: 9, horizontal: 20),
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
                     child: Positioned(
                       bottom: 0, // Ajusta la distancia desde la parte inferior
                       left: 10, // Ajusta la distancia desde la izquierda
@@ -328,7 +238,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                         ),
                         child: Container(
                           height: 50,
-                          width: 9360,
+                          width: 999,
                           alignment: Alignment.center,
                           child: const Text(
                             'Ver Menú',
@@ -342,8 +252,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                     ),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 9, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 20),
                     child: Positioned(
                       bottom: 0, // Ajusta la distancia desde la parte inferior
                       left: 10, // Ajusta la distancia desde la izquierda
@@ -359,7 +268,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
                         },
                         style: ButtonStyle(
                           minimumSize:
-                              MaterialStateProperty.all(const Size(9360, 50)),
+                              MaterialStateProperty.all(const Size(999, 50)),
                           backgroundColor:
                               MaterialStateProperty.all<Color>(Colors.black),
                           textStyle: MaterialStateProperty.all<TextStyle>(
@@ -471,25 +380,25 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
   void backHome() {
     // context.read<LocalesBloc>().add(LocalSingleView(localId));
     // context.read<LocalesBloc>().add(LocalRequest());
+  Navigator.pop(context);
+    // Navigator.pushReplacement(
+    //   context,
+    //   PageRouteBuilder(
+    //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+    //       return SlideTransition(
+    //         position: Tween(
+    //           begin:
+    //               const Offset(0, -1), // Cambia aquí para iniciar desde arriba
+    //           end: Offset.zero,
+    //         ).animate(animation),
+    //         child: child,
+    //       );
+    //     },
+    //     // ... Otros parámetros de PageRouteBuilder);
 
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SlideTransition(
-            position: Tween(
-              begin:
-                  const Offset(0, -1), // Cambia aquí para iniciar desde arriba
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-        },
-        // ... Otros parámetros de PageRouteBuilder);
-
-        pageBuilder: (_, __, ___) => const LocalView(),
-      ),
-    );
+    //     pageBuilder: (_, __, ___) => const LocalView(),
+    //   ),
+    // );
   }
 
   void goingToLocation(id) {
@@ -514,7 +423,7 @@ class _SingleViewLocalState extends State<SingleViewLocal> {
         },
         // ... Otros parámetros de PageRouteBuilder);
 
-        pageBuilder: (_, __, ___) => MapScreen(), //pasar el id
+        pageBuilder: (_, __, ___) => MapScreen(id), //pasar el id
       ),
     );
   }

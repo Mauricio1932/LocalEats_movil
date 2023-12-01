@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localeats/create_usecase_config.dart';
+import 'package:localeats/features/locales/presetation/bloc/bloc/my_bussines_bloc.dart';
+import 'package:localeats/features/menu/presentation/bloc/bloc_new_menu/new_menu_bloc.dart';
 import 'package:localeats/features/user/presentation/bloc/bloc_login/user_bloc.dart';
 
+import 'coment_usecase_config.dart';
+import 'features/locales/presetation/bloc/comentario_bloc/comentario_bloc.dart';
 import 'features/maps/presentation/bloc/bloc_maps/Mapsbloc.dart';
 import 'features/menu/presentation/bloc/bloc_menu/menu_bloc.dart';
 import 'features/user/presentation/bloc/bloc_create_local/create_local_bloc.dart';
@@ -23,6 +27,7 @@ UsecaseLocalesConfig usecaseConfig = UsecaseLocalesConfig();
 UseCaseUserConfig useCaseUserConfig = UseCaseUserConfig();
 UseCaseCrearUserConfig useCaseCrearUserConfig = UseCaseCrearUserConfig();
 UsecaseMapsConfig usecaseMapsConfig = UsecaseMapsConfig();
+UseCaseComentarioConfig useCaseComentariConfig = UseCaseComentarioConfig();
 
 void main() {
   runApp(const MyApp());
@@ -35,11 +40,24 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        //  BlocProvider(
+        //   create: (BuildContext context) => AddcommentBloc(useCaseComentariConfig.newComentarioUseCase!)
+        //   //  child: Container(),    
+        // ),
+        BlocProvider(
+          create: (BuildContext context) => ComentarioBloc(useCaseComentariConfig.getComentariosUseCase!)
+        ),
+        BlocProvider(
+          create: (BuildContext context) => NewMenuBloc(menuCaseUserConfig.postMenuUsecase!)
+        ),
         BlocProvider(
           create: (BuildContext context) => MenuBloc(menuCaseUserConfig.getMenuUsecase!)
         ),
         BlocProvider(
-          create: (BuildContext context) => LocalesBloc(usecaseConfig.getLocalUsecase!,usecaseConfig.getMyLocalUsecase!)
+          create: (BuildContext context) => MyBussinesBloc(usecaseConfig.getMyLocalUsecase!)
+        ),
+        BlocProvider(
+          create: (BuildContext context) => LocalesBloc(usecaseConfig.getLocalUsecase!)
         ),
 
         BlocProvider(

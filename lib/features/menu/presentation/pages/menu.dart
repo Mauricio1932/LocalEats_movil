@@ -86,7 +86,7 @@ class _PDFScreenState extends State<PDFScreen> {
   Future<void> loadRemotePDF() async {
     try {
       // Aquí puedes poner la URL del PDF que desees cargar
-      const remotePDFUrl = "http://192.168.1.117:3000/api/menu/view_pdf?pdf=";
+      const remotePDFUrl = "http://192.168.43.57:3000/api/menu/view_pdf?pdf=";
 
       setState(() {
         remotePDFpath = "$remotePDFUrl$namePdf";

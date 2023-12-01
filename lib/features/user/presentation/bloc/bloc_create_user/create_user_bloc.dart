@@ -9,6 +9,7 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateState> {
 
   CreateUserBloc(this.useCaseCrearUserConfig) : super(const CreateState()) {
     on<CreateUserRequest>(_handleLoginUser);
+    on<ResetState>(_handleReset);
   }
 
   Future<void> _handleLoginUser(event, Emitter<CreateState> emit) async {
@@ -22,7 +23,7 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateState> {
       emit(
         state.copyWith(
           userStatus: UserRequest.requestSuccess,
-          user: response,
+          user: [response],
         ),
       );
     } catch (error) {
@@ -33,5 +34,16 @@ class CreateUserBloc extends Bloc<CreateUserEvent, CreateState> {
         userStatus: UserRequest.requestFailure,
       ));
     }
+  }
+
+  Future<void> _handleReset(
+    event,
+    Emitter<CreateState> emit,
+  ) async {
+    print("object reset");
+    emit(state.copyWith(
+      userStatus: UserRequest.unknown,
+      // Otros campos del estado que podrían necesitar ser reseteados
+    ));
   }
 }

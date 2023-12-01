@@ -8,6 +8,7 @@ class GetMyLocalUsecase {
   GetMyLocalUsecase(this.localRepository);
 
   Future<List<Local>> execute() async {
+    print("se ejecuto el usecase getMylocals");
     try {
       // Llama al repositorio para obtener la lista de locales
       final locales = await localRepository.getMyLocals();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localeats/features/user/presentation/pages/vista_login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../locales/presetation/create_local.dart';
 import '../../../locales/presetation/mi_bussinies.dart';
@@ -16,24 +17,28 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  void cerrarSesion() {}
+  String name = "";
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // late String name = sharedPreferences.getString('name') ?? "";
     return BlocBuilder<UserBloc, UserState>(
       builder: (context, state) {
         if (state.userStatus == UserRequest.requestInProgress) {
+          obtenerDatoSharedPreferences();
+
           return const Center(child: CircularProgressIndicator());
         }
         if (state.userStatus == UserRequest.requestFailure) {
+          obtenerDatoSharedPreferences();
           return const LoginView();
-          // Navigator.of(context).pushReplacement(
-          //   MaterialPageRoute(
-          //     builder: (BuildContext context) =>  LoginView(),
-          //   ),
-          // );
         }
         if (state.userStatus == UserRequest.unknown) {
+          obtenerDatoSharedPreferences();
           context.read<UserBloc>().add(GetAuthToken());
         }
         return Scaffold(
@@ -42,7 +47,6 @@ class _ProfileState extends State<Profile> {
               icon: const Icon(Icons.arrow_back_ios),
               color: Colors.black,
               onPressed: () {
-                // Lógica para manejar el botón de retroceso aquí
                 Navigator.pop(context);
               },
             ),
@@ -50,19 +54,17 @@ class _ProfileState extends State<Profile> {
             elevation: 0,
             centerTitle: true,
             title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Padding(
-                  padding: EdgeInsets.only(left: 60, right: 60),
-                  child: Text(
-                    'Maria Cruz',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                    ),
+                const Spacer(),
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
                   ),
                 ),
+                const Spacer(),
                 IconButton(
                   icon: const Icon(Icons.logout),
                   color: Colors.black,
@@ -78,12 +80,15 @@ class _ProfileState extends State<Profile> {
           body: BlocBuilder<UserBloc, UserState>(
             builder: (context, state) {
               if (state.userStatus == UserRequest.requestInProgress) {
+                obtenerDatoSharedPreferences();
                 return const Center(child: CircularProgressIndicator());
               }
               if (state.userStatus == UserRequest.requestFailure) {
+                obtenerDatoSharedPreferences();
                 return const LoginView();
               }
               if (state.userStatus == UserRequest.unknown) {
+                obtenerDatoSharedPreferences();
                 context.read<UserBloc>().add(GetAuthToken());
               }
               return Column(
@@ -105,7 +110,7 @@ class _ProfileState extends State<Profile> {
                         child: Center(
                           child: ClipOval(
                             child: Image.asset(
-                              'assets/download5.jpg',
+                              'assets/local_logo.jpg',
                               width: 200,
                               height: 200,
                               fit: BoxFit.cover,
@@ -164,6 +169,22 @@ class _ProfileState extends State<Profile> {
             child: const Icon(Icons.add, color: Colors.black),
           ),
         );
+      },
+    );
+  }
+
+  Future<void> obtenerDatoSharedPreferences() async {
+    // Obtener SharedPreferences
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    // Obtener el dato, si no existe, se puede proporcionar un valor predeterminado
+    // String dato = prefs.getString('miDato') ?? 'Valor predeterminado';
+    late String dato = sharedPreferences.getString('name') ?? "Desconocido";
+    print("nombre $dato");
+    // Actualizar el estado con el dato obtenido
+    setState(
+      () {
+        name = dato;
       },
     );
   }

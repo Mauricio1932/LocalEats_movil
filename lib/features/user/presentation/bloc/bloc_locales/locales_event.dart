@@ -4,6 +4,8 @@ abstract class LocalesEvent {
 
 class LocalGetRequest extends LocalesEvent {}
 class GetMyLocals extends LocalesEvent {}
+class ReseteLocal extends LocalesEvent{}
+
 
 // class LocalSingleRequest extends LocalesEvent {
 //   // const LocalSingleRequest(this.localId);

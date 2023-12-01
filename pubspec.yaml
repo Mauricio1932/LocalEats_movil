@@ -64,6 +64,8 @@ dependencies:
   snack:
   google_maps_flutter: ^2.5.0
   flutter_native_splash: ^2.2.14
+  material_design_icons_flutter: ^7.0.7296
+  google_maps_webservice: ^0.0.20-nullsafety.5
   
 dev_dependencies:
   flutter_test:

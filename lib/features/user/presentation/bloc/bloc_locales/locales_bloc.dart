@@ -9,15 +9,11 @@ import 'locales_state.dart';
 
 class LocalesBloc extends Bloc<LocalesEvent, LocalesState> {
   final GetLocalUsecase getLocalUsecase;
-  final GetMyLocalUsecase getMyLocalUsecase;
-  LocalesBloc(this.getLocalUsecase, this.getMyLocalUsecase)
-      : super(const LocalesState()) {
+  // final GetMyLocalUsecase getMyLocalUsecase;
+  LocalesBloc(this.getLocalUsecase) : super(const LocalesState()) {
     on<LocalGetRequest>(_handleLocalesRecuested);
-    on<GetMyLocals>(_handleGetMylocals);
-
-    // on<LocalSingleView>(_handleViewLocal);
-    // on<DeleteLocalSingleView>(_handleCloseViewLocal);
-    // on<LocalSingleRequest>(_handleSingleLocalesRecuested);
+    on<ReseteLocal>(_handleReset);
+   
   }
 
   Future<void> _handleLocalesRecuested(
@@ -44,30 +40,16 @@ class LocalesBloc extends Bloc<LocalesEvent, LocalesState> {
     }
   }
 
-  Future<void> _handleGetMylocals(
+  Future<void> _handleReset(
     event,
     Emitter<LocalesState> emit,
   ) async {
-    try {
-      emit(state.copyWith(
-        localesStatus: LocalesRequest.requestInProgress,
-      ));
-
-      final response = await getMyLocalUsecase.execute();
-
-      emit(
-        state.copyWith(
-          localesStatus: LocalesRequest.requestSuccess,
-          locales: response,
-        ),
-      );
-    } catch (e) {
-      emit(state.copyWith(
-        localesStatus: LocalesRequest.requestFailure,
-      ));
-    }
+    print("object reset");
+    emit(state.copyWith(
+      localesStatus: LocalesRequest.unknown,
+      // Otros campos del estado que podrían necesitar ser reseteados
+    ));
   }
-
   // Future<void> _handleViewLocal(
   //   event,
   //   Emitter<LocalesState> emit,
